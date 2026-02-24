@@ -1,0 +1,16 @@
+spring:
+  application:
+    name: application
+
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  prometheus:
+    metrics:
+      export:
+        enabled: true
+server:
+  port: 8070

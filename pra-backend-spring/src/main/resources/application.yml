@@ -1,0 +1,127 @@
+spring:
+  application:
+    name: enterprise-app
+  
+  profiles:
+    active: ${SPRING_PROFILES_ACTIVE:dev}
+  
+  jpa:
+    open-in-view: false
+    properties:
+      hibernate:
+        format_sql: true
+        use_sql_comments: true
+  
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
+
+# File Upload Configuration
+file:
+  upload-dir: uploads
+
+# MinIO Configuration
+
+minio:
+#  endpoint: ${MINIO_ENDPOINT:http://103.73.224.48:9000}
+#  access-key: ${MINIO_ACCESS_KEY:yMZJ1o9X8lJV6L5YUYQ7}
+#  secret-key: ${MINIO_SECRET_KEY:yXGwydqiuJED7CpI3v4KYOtOBevBPSTY7BR5ugzp}
+#  bucket-name: ${MINIO_BUCKET_NAME:application-files}
+#  secure: ${MINIO_SECURE:false}
+  endpoint: ${MINIO_ENDPOINT}
+  access-key: ${MINIO_ACCESS_KEY}
+  secret-key: ${MINIO_SECRET_KEY}
+  bucket-name: ${MINIO_BUCKET_NAME:application-files}
+  secure: ${MINIO_SECURE:false}
+
+
+# Application Configuration
+app:
+  name: Enterprise Application
+  version: 1.0.0
+  url: ${APP_URL:http://localhost:8080}
+  frontend-url: ${FRONTEND_URL:http://localhost:3000}
+  
+  jwt:
+    secret: ${JWT_SECRET:404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970}
+    expiration: ${JWT_EXPIRATION:900000} # 15 minutes in milliseconds
+    refresh-expiration: ${JWT_REFRESH_EXPIRATION:604800000} # 7 days in milliseconds
+  
+  cors:
+    allowed-origins: ${CORS_ALLOWED_ORIGINS:http://localhost:3000,http://localhost:8080}
+    allowed-methods: GET,POST,PUT,DELETE,PATCH,OPTIONS
+    allowed-headers: "*"
+    allow-credentials: true
+    max-age: 3600
+  
+  security:
+    rate-limit:
+      enabled: ${RATE_LIMIT_ENABLED:true}
+      capacity: ${RATE_LIMIT_CAPACITY:100}
+      refill-tokens: ${RATE_LIMIT_REFILL_TOKENS:10}
+      refill-duration-seconds: 1
+    
+    login-attempts:
+      max-attempts: 5
+      lockout-duration-minutes: 15
+  
+  email:
+    verification-expiration-hours: 24
+    password-reset-expiration-hours: 1
+  
+  oauth2:
+    authorized-redirect-uris:
+#      - ${app.frontend-url}/oauth2/redirect
+      - http://localhost:3000/oauth2/redirect
+      - http://localhost:8080/oauth2/callback/google
+
+# Management & Monitoring
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus
+      base-path: /actuator
+  
+  endpoint:
+    health:
+      show-details: when-authorized
+      probes:
+        enabled: true
+  
+  health:
+    livenessstate:
+      enabled: true
+    readinessstate:
+      enabled: true
+  
+  metrics:
+    tags:
+      application: ${spring.application.name}
+  prometheus:
+    metrics:
+      export:
+        enabled: true
+
+# Logging
+logging:
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"
+    file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+  level:
+    root: INFO
+    com.bappy.application: DEBUG
+    org.springframework.security: DEBUG
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+
+# OpenAPI / Swagger
+springdoc:
+  api-docs:
+    path: /api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+    operations-sorter: method
+    tags-sorter: alpha
+  show-actuator: true
