@@ -12,10 +12,13 @@ import {
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { BarChart3 } from 'lucide-react';
+import React from 'react';
 
 /* -------------------------
    Types
    ------------------------- */
+
+
 
 type RawCategory = {
   category: string;
@@ -101,6 +104,25 @@ export function CategoryDemandChart({ rawData, top = 6 }: Props) {
     console.log('Category clicked:', entry?.category);
   }
 
+  const [axisTextColor, setAxisTextColor] = React.useState('#0f172a');
+
+  React.useEffect(() => {
+    const update = () => {
+      const isDark = document.documentElement.classList.contains('dark');
+      setAxisTextColor(isDark ? '#e5e7eb' : '#0f172a');
+    };
+
+    update();
+
+    const observer = new MutationObserver(update);
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ['class']
+    });
+
+    return () => observer.disconnect();
+  }, []);
+
   /* -------------------------
      Tooltip
      ------------------------- */
@@ -148,16 +170,16 @@ export function CategoryDemandChart({ rawData, top = 6 }: Props) {
   };
 
   return (
-    <Card className='overflow-hidden'>
+    <Card className='overflow-hidden border dark:bg-slate-800'>
       <CardHeader className='flex items-center justify-between'>
-        <CardTitle className='flex items-center gap-2 text-sm font-medium text-slate-700'>
+        <CardTitle className='flex items-center gap-2 text-sm font-medium text-slate-700 dark:text-gray-100'>
           <span className='inline-flex items-center justify-center rounded-full bg-indigo-600 p-1.5'>
             <BarChart3 className='h-4 w-4 text-white' />
           </span>
           Category Demand Snapshot
         </CardTitle>
 
-        <div className='text-xs font-medium text-slate-500'>
+        <div className='text-xs font-medium text-slate-500 dark:text-gray-100'>
           Based on views (you can switch to purchases)
         </div>
       </CardHeader>
@@ -178,18 +200,15 @@ export function CategoryDemandChart({ rawData, top = 6 }: Props) {
                 axisLine={false}
                 tickLine={false}
               />
-
               <YAxis
                 type='category'
                 dataKey='category'
                 width={120}
                 axisLine={false}
                 tickLine={false}
-                tick={{ fontSize: 13, fill: '#0f172a' }}
+                tick={{ fontSize: 13, fill: axisTextColor }}
               />
-
               <ReTooltip content={<CustomBarTooltip />} />
-
               <Bar
                 dataKey='percent'
                 isAnimationActive
@@ -214,7 +233,7 @@ export function CategoryDemandChart({ rawData, top = 6 }: Props) {
         </div>
 
         <div className='mt-3 flex items-center justify-between'>
-          <div className='flex items-center gap-4 text-xs text-slate-600'>
+          <div className='flex items-center gap-4 text-xs text-slate-600 dark:text-gray-100'>
             <div className='flex items-center gap-2'>
               <span className='h-3 w-3 rounded-sm bg-indigo-600' />
               <span>Stable</span>

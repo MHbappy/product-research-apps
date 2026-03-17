@@ -127,7 +127,7 @@ export function ProductOpportunityQuadrant({
 
   return (
     // add min-w-0 so this card can shrink inside a flex/grid column and not force extra width
-    <Card className='min-w-0 overflow-hidden'>
+    <Card className='min-w-0 overflow-hidden dark:bg-slate-800'>
       <CardHeader className='flex items-center justify-between'>
         <CardTitle className='flex items-center gap-2 text-sm font-medium text-slate-700'>
           <span className='inline-flex items-center justify-center rounded-full bg-emerald-500 p-1.5'>

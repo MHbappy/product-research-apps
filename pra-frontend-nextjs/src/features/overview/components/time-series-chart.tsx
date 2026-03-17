@@ -19,6 +19,7 @@ import {
   CardTitle,
   CardDescription
 } from '@/components/ui/card';
+import React from 'react';
 
 /* -------------------------
    Types
@@ -132,8 +133,27 @@ export function TimeSeriesChart({ rawData }: Props) {
   const viewsColor = '#4f46e5';
   const convColor = '#06b6d4';
 
+  const [axisTextColor, setAxisTextColor] = React.useState('#0f172a');
+
+  React.useEffect(() => {
+    const update = () => {
+      const isDark = document.documentElement.classList.contains('dark');
+      setAxisTextColor(isDark ? '#e5e7eb' : '#0f172a');
+    };
+
+    update();
+
+    const observer = new MutationObserver(update);
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ['class']
+    });
+
+    return () => observer.disconnect();
+  }, []);
+
   return (
-    <Card className='overflow-hidden'>
+    <Card className='overflow-hidden dark:bg-slate-800'>
       <CardHeader className='flex items-center justify-between'>
         <div>
           <CardTitle className='text-sm font-medium text-slate-700'>
@@ -171,9 +191,15 @@ export function TimeSeriesChart({ rawData }: Props) {
                 vertical={false}
               />
 
-              <XAxis dataKey='label' tick={{ fontSize: 12, fill: '#0f172a' }} />
+              <XAxis
+                dataKey='label'
+                tick={{ fontSize: 12, fill: axisTextColor }}
+              />
 
-              <YAxis yAxisId='left' tick={{ fontSize: 12, fill: '#0f172a' }} />
+              <YAxis
+                yAxisId='left'
+                tick={{ fontSize: 12, fill: axisTextColor }}
+              />
 
               <ReTooltip content={<CustomTimeTooltip />} />
 

@@ -159,7 +159,7 @@ export function MarketShareChart({ rawData }: Props) {
   };
 
   return (
-    <Card className='overflow-hidden'>
+    <Card className='overflow-hidden dark:bg-slate-800'>
       <CardHeader className='flex items-center justify-between'>
         <CardTitle className='flex items-center gap-2 text-sm font-medium text-slate-700'>
           <span className='inline-flex items-center justify-center rounded-full bg-amber-500 p-1.5'>

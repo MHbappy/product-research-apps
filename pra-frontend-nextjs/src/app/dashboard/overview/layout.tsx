@@ -1,12 +1,8 @@
 import PageContainer from '@/components/layout/page-container';
 import { DashboardViewSwitcher } from '@/features/overview/components/DashboardViewSwitcher';
+import React from 'react';
 
-export default function OverViewLayout({
-  sales,
-  pie_stats,
-  bar_stats,
-  area_stats
-}: {
+export default function OverViewLayout({}: {
   sales: React.ReactNode;
   pie_stats: React.ReactNode;
   bar_stats: React.ReactNode;
