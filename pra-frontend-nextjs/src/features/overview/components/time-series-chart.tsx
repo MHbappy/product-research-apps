@@ -104,18 +104,26 @@ function CustomTimeTooltip({
   const conversionRate = (item.conversions / Math.max(1, item.views)) * 100;
 
   return (
-    <div className='rounded-md border border-slate-100 bg-white p-2 text-sm shadow-md'>
-      <div className='font-medium text-slate-800'>{item.label}</div>
-
-      <div className='mt-1 text-xs text-slate-600'>
-        Views: <span className='font-semibold'>{item.views}</span>
+    <div className='rounded-2xl border border-slate-200/80 bg-white p-3 text-sm shadow-[0_8px_30px_rgba(15,23,42,0.08)] dark:border-slate-800 dark:bg-slate-900'>
+      <div className='font-semibold text-slate-950 dark:text-white'>
+        {item.label}
       </div>
 
-      <div className='text-xs text-slate-600'>
-        Conversions: <span className='font-semibold'>{item.conversions}</span>
+      <div className='mt-1 text-xs text-slate-600 dark:text-slate-400'>
+        Views:{' '}
+        <span className='font-semibold text-slate-900 dark:text-slate-100'>
+          {item.views}
+        </span>
       </div>
 
-      <div className='mt-1 text-xs text-slate-500'>
+      <div className='text-xs text-slate-600 dark:text-slate-400'>
+        Conversions:{' '}
+        <span className='font-semibold text-slate-900 dark:text-slate-100'>
+          {item.conversions}
+        </span>
+      </div>
+
+      <div className='mt-1 text-xs text-slate-500 dark:text-slate-400'>
         Conv Rate:{' '}
         <span className='font-semibold'>{conversionRate.toFixed(2)}%</span>
       </div>
@@ -138,7 +146,7 @@ export function TimeSeriesChart({ rawData }: Props) {
   React.useEffect(() => {
     const update = () => {
       const isDark = document.documentElement.classList.contains('dark');
-      setAxisTextColor(isDark ? '#e5e7eb' : '#0f172a');
+      setAxisTextColor(isDark ? '#e2e8f0' : '#0f172a');
     };
 
     update();
@@ -153,26 +161,33 @@ export function TimeSeriesChart({ rawData }: Props) {
   }, []);
 
   return (
-    <Card className='overflow-hidden dark:bg-slate-800'>
-      <CardHeader className='flex items-center justify-between'>
+    <Card className='group relative overflow-hidden rounded-[28px] border border-slate-200/80 bg-white shadow-[0_8px_30px_rgba(15,23,42,0.05)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md dark:border-slate-800 dark:bg-slate-900'>
+      {/* Glow effect (MiniStat style) */}
+      <div className='pointer-events-none absolute top-0 right-0 h-24 w-24 translate-x-8 -translate-y-8 rounded-full bg-indigo-500/10 blur-2xl transition-all duration-300 group-hover:bg-indigo-500/20' />
+
+      <CardHeader className='relative flex items-center justify-between'>
         <div>
-          <CardTitle className='text-sm font-medium text-slate-700'>
+          <CardTitle className='text-sm font-medium text-slate-950 transition-colors duration-300 group-hover:text-slate-900 dark:text-white'>
             Performance Over Time
           </CardTitle>
-          <CardDescription>Views vs Conversions (last 30 days)</CardDescription>
+
+          <CardDescription className='text-slate-600 transition-colors duration-300 group-hover:text-slate-700 dark:text-slate-400 dark:group-hover:text-slate-300'>
+            Views vs Conversions (last 30 days)
+          </CardDescription>
         </div>
 
-        <div className='text-xs font-medium text-slate-500'>Last 30 days</div>
+        <div className='text-xs font-medium text-slate-600 transition-colors duration-300 group-hover:text-slate-700 dark:text-slate-400 dark:group-hover:text-slate-300'>
+          Last 30 days
+        </div>
       </CardHeader>
 
-      <CardContent>
+      <CardContent className='relative'>
         <div className='h-64 w-full md:h-80'>
           <ResponsiveContainer width='100%' height='100%'>
             <AreaChart
               data={data}
               margin={{ top: 8, right: 20, left: 0, bottom: 8 }}
             >
-              {/* Gradients */}
               <defs>
                 <linearGradient id='gradViews' x1='0' y1='0' x2='0' y2='1'>
                   <stop offset='5%' stopColor={viewsColor} stopOpacity={0.12} />
@@ -187,7 +202,7 @@ export function TimeSeriesChart({ rawData }: Props) {
 
               <CartesianGrid
                 strokeDasharray='3 3'
-                stroke='#e6e9ee'
+                stroke='#e5e7eb'
                 vertical={false}
               />
 
@@ -203,7 +218,6 @@ export function TimeSeriesChart({ rawData }: Props) {
 
               <ReTooltip content={<CustomTimeTooltip />} />
 
-              {/* Views */}
               <Area
                 yAxisId='left'
                 type='monotone'
@@ -222,7 +236,6 @@ export function TimeSeriesChart({ rawData }: Props) {
                 strokeWidth={2}
               />
 
-              {/* Conversions */}
               <Line
                 yAxisId='left'
                 type='monotone'
@@ -241,7 +254,7 @@ export function TimeSeriesChart({ rawData }: Props) {
           </ResponsiveContainer>
         </div>
 
-        <div className='mt-3 text-xs text-slate-600'>
+        <div className='mt-3 text-xs text-slate-600 transition-colors duration-300 group-hover:text-slate-700 dark:text-slate-400 dark:group-hover:text-slate-300'>
           Area shading shows volume; lines show trend. Hover for exact numbers.
         </div>
       </CardContent>
