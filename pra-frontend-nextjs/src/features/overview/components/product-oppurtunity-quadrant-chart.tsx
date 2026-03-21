@@ -67,7 +67,6 @@ export function ProductOpportunityQuadrant({
   competitionPct = 0.4,
   invertYAxis = false
 }: ProductOpportunityQuadrantProps) {
-  // defensive: ensure numeric fields
   const data: ProductItem[] = (rawData || []).map((p) => ({
     id: p.id,
     name: (p.name as string) || '—',
@@ -77,14 +76,12 @@ export function ProductOpportunityQuadrant({
     color: (p as any).color || '#64748b'
   }));
 
-  // thresholds derived from percentiles so thresholds adapt to dataset scale
   const demandVals = data.map((d) => d.demand);
   const competitionVals = data.map((d) => d.competition);
 
   const demandThresh = percentile(demandVals, demandPct);
   const competitionThresh = percentile(competitionVals, competitionPct);
 
-  // chart domain padding
   const minDemand = Math.min(...demandVals, 0);
   const maxDemand = Math.max(...demandVals, 1000);
   const padX = Math.max(1, Math.round((maxDemand - minDemand) * 0.08));
@@ -93,27 +90,35 @@ export function ProductOpportunityQuadrant({
   const maxComp = Math.max(...competitionVals, 10);
   const padY = Math.max(1, Math.round((maxComp - minComp) * 0.08));
 
-  // quadrant palette (subtle fills)
-  const goldmineFill = 'rgba(16,185,129,0.08)'; // light green
-  const battlefieldFill = 'rgba(245,158,11,0.06)'; // light amber
-  const deadFill = 'rgba(239,68,68,0.06)'; // light red
-  const nicheFill = 'rgba(99,102,241,0.06)'; // light indigo
+  const goldmineFill = 'rgba(16,185,129,0.08)';
+  const battlefieldFill = 'rgba(245,158,11,0.06)';
+  const deadFill = 'rgba(239,68,68,0.06)';
+  const nicheFill = 'rgba(99,102,241,0.06)';
 
-  // ---- Fix: loosen TooltipProps value generic to `any` so TS doesn't complain ----
   const CustomScatterTooltip: React.FC<TooltipProps<any, string>> = (props) => {
     const { active, payload } = props;
     if (!active || !payload || !payload.length) return null;
+
     const p = payload[0].payload as ProductItem;
+
     return (
-      <div className='rounded-md border border-slate-100 bg-white p-2 text-sm shadow-md'>
-        <div className='font-medium text-slate-800'>{p.name}</div>
-        <div className='mt-1 text-xs text-slate-600'>
-          Demand: <span className='font-semibold'>{p.demand}</span>
+      <div className='rounded-2xl border border-slate-200/80 bg-white p-3 text-sm shadow-[0_8px_30px_rgba(15,23,42,0.08)] dark:border-slate-800 dark:bg-slate-900'>
+        <div className='font-semibold text-slate-950 dark:text-white'>
+          {p.name}
         </div>
-        <div className='text-xs text-slate-600'>
-          Competition: <span className='font-semibold'>{p.competition}</span>
+        <div className='mt-1 text-xs text-slate-600 dark:text-slate-400'>
+          Demand:{' '}
+          <span className='font-semibold text-slate-900 dark:text-slate-100'>
+            {p.demand}
+          </span>
         </div>
-        <div className='mt-1 text-xs text-slate-500'>
+        <div className='text-xs text-slate-600 dark:text-slate-400'>
+          Competition:{' '}
+          <span className='font-semibold text-slate-900 dark:text-slate-100'>
+            {p.competition}
+          </span>
+        </div>
+        <div className='mt-1 text-xs text-slate-500 dark:text-slate-400'>
           {getQuadrantLabel(
             p.demand,
             p.competition,
@@ -126,35 +131,32 @@ export function ProductOpportunityQuadrant({
   };
 
   return (
-    // add min-w-0 so this card can shrink inside a flex/grid column and not force extra width
-    <Card className='min-w-0 overflow-hidden dark:bg-slate-800'>
-      <CardHeader className='flex items-center justify-between'>
-        <CardTitle className='flex items-center gap-2 text-sm font-medium text-slate-700'>
-          <span className='inline-flex items-center justify-center rounded-full bg-emerald-500 p-1.5'>
+    <Card className='group relative min-w-0 overflow-hidden rounded-[28px] border border-slate-200/80 bg-white shadow-[0_8px_30px_rgba(15,23,42,0.05)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md dark:border-slate-800 dark:bg-slate-900'>
+      {/* Glow effect (MiniStat style) */}
+      <div className='pointer-events-none absolute top-0 right-0 h-24 w-24 translate-x-8 -translate-y-8 rounded-full bg-emerald-500/10 blur-2xl transition-all duration-300 group-hover:bg-emerald-500/20' />
+
+      <CardHeader className='relative flex items-center justify-between'>
+        <CardTitle className='flex items-center gap-2 text-sm font-medium text-slate-950 dark:text-white'>
+          <span className='inline-flex items-center justify-center rounded-full bg-emerald-500 p-1.5 transition-transform duration-300 group-hover:scale-105'>
             <BarChart3 className='h-4 w-4 text-white' />
           </span>
           Product Opportunity Quadrant
         </CardTitle>
 
-        <div className='text-xs text-slate-500'>
+        <div className='text-xs text-slate-600 transition-colors duration-300 group-hover:text-slate-700 dark:text-slate-400 dark:group-hover:text-slate-300'>
           Demand → (right) — Competition ↑ (up)
         </div>
       </CardHeader>
 
-      {/* ensure the card content can shrink (min-w-0) and hide overflow if required */}
-      <CardContent className='min-w-0'>
+      <CardContent className='relative min-w-0'>
         <div
-          // keep exact height, allow width to shrink with minWidth:0
           style={{ width: '100%', height: 360, minWidth: 0 }}
           className='min-w-0'
         >
-          {/* ResponsiveContainer will fill the available column width */}
           <ResponsiveContainer width='100%' height='100%'>
-            {/* increase right margin and give left margin room so axis labels/ticks don't get clipped */}
             <ScatterChart margin={{ top: 12, right: 40, bottom: 36, left: 12 }}>
               <CartesianGrid stroke='#e6e9ee' strokeDasharray='3 3' />
 
-              {/* X = demand */}
               <XAxis
                 type='number'
                 dataKey='demand'
@@ -162,7 +164,6 @@ export function ProductOpportunityQuadrant({
                 domain={[Math.max(0, minDemand - padX), maxDemand + padX]}
                 tick={{ fontSize: 12, fill: '#0f172a' }}
                 tickFormatter={(v) => `${v}`}
-                // add padding to avoid ticks/labels hitting edge; offset label more into visible area
                 padding={{ left: 12, right: 12 }}
                 label={{
                   value: 'Market Demand (volume)',
@@ -172,8 +173,6 @@ export function ProductOpportunityQuadrant({
                 }}
               />
 
-              {/* Y = competition difficulty */}
-              {/* reserve width so long label fits and doesn't cause horizontal overflow */}
               <YAxis
                 type='number'
                 dataKey='competition'
@@ -190,7 +189,6 @@ export function ProductOpportunityQuadrant({
                 reversed={invertYAxis}
               />
 
-              {/* quadrant threshold lines */}
               <ReferenceLine
                 x={demandThresh}
                 stroke='#94a3b8'
@@ -202,7 +200,6 @@ export function ProductOpportunityQuadrant({
                 strokeDasharray='3 3'
               />
 
-              {/* quadrant shading (use ReferenceArea coordinates) */}
               <ReferenceArea
                 x1={Math.max(0, minDemand - padX)}
                 x2={demandThresh}
@@ -277,7 +274,6 @@ export function ProductOpportunityQuadrant({
             </ScatterChart>
           </ResponsiveContainer>
         </div>
-
         {/* quick legend text */}
         {/*<div className='mt-3 grid grid-cols-2 gap-2 text-xs text-slate-600'>*/}
         {/*  <div>*/}
