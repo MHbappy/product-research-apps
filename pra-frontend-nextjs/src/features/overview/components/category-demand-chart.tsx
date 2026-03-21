@@ -18,8 +18,6 @@ import React from 'react';
    Types
    ------------------------- */
 
-
-
 type RawCategory = {
   category: string;
   value: number;
@@ -109,7 +107,7 @@ export function CategoryDemandChart({ rawData, top = 6 }: Props) {
   React.useEffect(() => {
     const update = () => {
       const isDark = document.documentElement.classList.contains('dark');
-      setAxisTextColor(isDark ? '#e5e7eb' : '#0f172a');
+      setAxisTextColor(isDark ? '#e2e8f0' : '#0f172a');
     };
 
     update();
@@ -138,25 +136,29 @@ export function CategoryDemandChart({ rawData, top = 6 }: Props) {
     const item = payload[0].payload as ProcessedCategory;
 
     return (
-      <div className='rounded-md border border-slate-100 bg-white p-2 text-sm shadow-md'>
-        <div className='font-medium text-slate-800'>{item.category}</div>
+      <div className='rounded-2xl border border-slate-200/80 bg-white p-3 text-sm shadow-[0_8px_30px_rgba(15,23,42,0.08)] dark:border-slate-800 dark:bg-slate-900'>
+        <div className='font-semibold text-slate-950 dark:text-white'>
+          {item.category}
+        </div>
 
-        <div className='mt-1 text-xs text-slate-600'>
+        <div className='mt-1 text-xs text-slate-600 dark:text-slate-400'>
           Share:{' '}
-          <span className='font-semibold text-slate-900'>
+          <span className='font-semibold text-slate-900 dark:text-slate-100'>
             {formatPercent(item.percent)}
           </span>
         </div>
 
-        <div className='text-xs text-slate-500'>Sample: {item.sampleSize}</div>
+        <div className='text-xs text-slate-500 dark:text-slate-400'>
+          Sample: {item.sampleSize}
+        </div>
 
         <div
           className={`mt-1 text-xs ${
             item.delta > 0
-              ? 'text-green-600'
+              ? 'text-emerald-600 dark:text-emerald-400'
               : item.delta < 0
-                ? 'text-red-600'
-                : 'text-slate-600'
+                ? 'text-red-600 dark:text-red-400'
+                : 'text-slate-600 dark:text-slate-400'
           }`}
         >
           {item.delta > 0
@@ -170,21 +172,24 @@ export function CategoryDemandChart({ rawData, top = 6 }: Props) {
   };
 
   return (
-    <Card className='overflow-hidden border dark:bg-slate-800'>
-      <CardHeader className='flex items-center justify-between'>
-        <CardTitle className='flex items-center gap-2 text-sm font-medium text-slate-700 dark:text-gray-100'>
-          <span className='inline-flex items-center justify-center rounded-full bg-indigo-600 p-1.5'>
+    <Card className='group relative overflow-hidden rounded-[28px] border border-slate-200/80 bg-white shadow-[0_8px_30px_rgba(15,23,42,0.05)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md dark:border-slate-800 dark:bg-slate-900'>
+      {/* Glow effect like MiniStat */}
+      <div className='pointer-events-none absolute top-0 right-0 h-24 w-24 translate-x-8 -translate-y-8 rounded-full bg-indigo-500/10 blur-2xl transition-all duration-300 group-hover:bg-indigo-500/20' />
+
+      <CardHeader className='relative flex items-center justify-between'>
+        <CardTitle className='flex items-center gap-2 text-sm font-medium text-slate-950 dark:text-white'>
+          <span className='inline-flex items-center justify-center rounded-full bg-indigo-600 p-1.5 transition-transform duration-300 group-hover:scale-105'>
             <BarChart3 className='h-4 w-4 text-white' />
           </span>
           Category Demand Snapshot
         </CardTitle>
 
-        <div className='text-xs font-medium text-slate-500 dark:text-gray-100'>
+        <div className='text-xs font-medium text-slate-600 transition-colors duration-300 group-hover:text-slate-700 dark:text-slate-400 dark:group-hover:text-slate-300'>
           Based on views (you can switch to purchases)
         </div>
       </CardHeader>
 
-      <CardContent>
+      <CardContent className='relative'>
         <div className='h-56 w-full md:h-64'>
           <ResponsiveContainer width='100%' height='100%'>
             <BarChart
@@ -199,6 +204,7 @@ export function CategoryDemandChart({ rawData, top = 6 }: Props) {
                 tickFormatter={(val: number) => `${val}%`}
                 axisLine={false}
                 tickLine={false}
+                tick={{ fill: axisTextColor, fontSize: 12 }}
               />
               <YAxis
                 type='category'
@@ -233,14 +239,14 @@ export function CategoryDemandChart({ rawData, top = 6 }: Props) {
         </div>
 
         <div className='mt-3 flex items-center justify-between'>
-          <div className='flex items-center gap-4 text-xs text-slate-600 dark:text-gray-100'>
+          <div className='flex items-center gap-4 text-xs text-slate-600 dark:text-slate-400'>
             <div className='flex items-center gap-2'>
               <span className='h-3 w-3 rounded-sm bg-indigo-600' />
               <span>Stable</span>
             </div>
 
             <div className='flex items-center gap-2'>
-              <span className='h-3 w-3 rounded-sm bg-green-600' />
+              <span className='h-3 w-3 rounded-sm bg-emerald-600' />
               <span>Rising</span>
             </div>
 
@@ -250,7 +256,7 @@ export function CategoryDemandChart({ rawData, top = 6 }: Props) {
             </div>
           </div>
 
-          <div className='text-xs text-slate-500'>
+          <div className='text-xs text-slate-500 dark:text-slate-400'>
             <span className='hidden md:inline'>
               Click a bar to filter the dashboard
             </span>
