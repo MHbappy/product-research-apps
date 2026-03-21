@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import React, { useEffect, useRef, useState } from 'react';
-import { Search } from 'lucide-react';
+import { Search, SlidersHorizontal } from 'lucide-react';
 import PageContainer from '@/components/layout/page-container';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -12,6 +12,13 @@ import { ProductPagination } from '@/components/products/product-pagination';
 import { PRODUCTS } from '@/data/products';
 import { useProductFilters } from '@/hooks/use-product-filters';
 import { ProductGridSkeleton } from '@/components/products/product-grid-skeleton';
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetDescription
+} from '@/components/ui/sheet';
 
 export default function ProductListingPage() {
   const {
@@ -44,6 +51,7 @@ export default function ProductListingPage() {
   } = useProductFilters(PRODUCTS, 9);
 
   const [isPaginating, setIsPaginating] = useState(false);
+  const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
   const paginationTimerRef = useRef<number | null>(null);
 
   useEffect(() => {
@@ -96,16 +104,77 @@ export default function ProductListingPage() {
                 />
               </div>
 
-              <Button className='w-full rounded-2xl bg-slate-950 text-white shadow-sm hover:bg-slate-800 sm:w-auto dark:bg-white dark:text-slate-950 dark:hover:bg-slate-200'>
-                <Link href='/dashboard/filtered-product'>Start Research</Link>
-              </Button>
+              <div className='flex w-full gap-3 sm:w-auto'>
+                <Sheet
+                  open={mobileFiltersOpen}
+                  onOpenChange={setMobileFiltersOpen}
+                >
+                  <Button
+                    type='button'
+                    variant='outline'
+                    onClick={() => setMobileFiltersOpen(true)}
+                    className='flex-1 rounded-2xl border-slate-200 bg-white text-slate-700 shadow-sm hover:bg-slate-50 hover:text-slate-950 sm:hidden dark:border-slate-800 dark:bg-slate-900 dark:text-slate-300 dark:hover:bg-slate-800 dark:hover:text-white'
+                  >
+                    <SlidersHorizontal className='mr-2 h-4 w-4' />
+                    Filters
+                  </Button>
+
+                  <SheetContent
+                    side='right'
+                    className='w-[92vw] overflow-y-auto border-slate-200 bg-slate-50 p-0 sm:max-w-md dark:border-slate-800 dark:bg-slate-950'
+                  >
+                    <div className='p-4'>
+                      <SheetHeader className='mb-4 text-left'>
+                        <SheetTitle className='text-slate-950 dark:text-white'>
+                          Filters
+                        </SheetTitle>
+                        <SheetDescription className='text-slate-600 dark:text-slate-400'>
+                          Refine products before browsing the full list.
+                        </SheetDescription>
+                      </SheetHeader>
+
+                      <ProductFilters
+                        query={query}
+                        onQueryChange={setQuery}
+                        category={category}
+                        onCategoryChange={setCategory}
+                        categories={categories}
+                        sortBy={sortBy}
+                        onSortByChange={setSortBy}
+                        lifecycleFilters={lifecycleFilters}
+                        onToggleLifecycle={toggleLifecycle}
+                        onClearLifecycle={clearLifecycleFilters}
+                        minPrice={minPrice}
+                        maxPrice={maxPrice}
+                        onMinPriceChange={setMinPrice}
+                        onMaxPriceChange={setMaxPrice}
+                        minQuality={minQuality}
+                        onMinQualityChange={setMinQuality}
+                        minScore={minScore}
+                        onMinScoreChange={setMinScore}
+                        filteredCount={filtered.length}
+                        totalProducts={totalProducts}
+                        avgRating={avgRating}
+                        onReset={clearFilters}
+                      />
+                    </div>
+                  </SheetContent>
+                </Sheet>
+
+                <Button
+                  asChild
+                  className='flex-1 rounded-2xl bg-slate-950 text-white shadow-sm hover:bg-slate-800 sm:w-auto sm:flex-none dark:bg-white dark:text-slate-950 dark:hover:bg-slate-200'
+                >
+                  <Link href='/dashboard/filtered-product'>Start Research</Link>
+                </Button>
+              </div>
             </div>
           </div>
         </div>
 
         <div className='grid grid-cols-1 gap-4 md:grid-cols-4 md:items-start'>
-          {/* Sticky filters on desktop, normal on mobile */}
-          <aside className='md:sticky md:top-28 md:col-span-1 md:self-start'>
+          {/* Sticky filters on desktop, hidden on mobile */}
+          <aside className='hidden md:sticky md:top-28 md:col-span-1 md:block md:self-start'>
             <ProductFilters
               query={query}
               onQueryChange={setQuery}
