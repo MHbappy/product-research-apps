@@ -235,7 +235,7 @@ export function UserDashboardOverview() {
               variant='ghost'
               className='w-full rounded-2xl border border-slate-200 bg-white text-slate-700 hover:bg-slate-50 hover:text-slate-950 sm:w-auto dark:border-slate-800 dark:bg-slate-900 dark:text-slate-300 dark:hover:bg-slate-800 dark:hover:text-white'
             >
-              New Insight
+              <Link href='/dashboard/category'>Explore Categories</Link>
             </Button>
           </div>
         </div>
