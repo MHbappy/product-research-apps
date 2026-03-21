@@ -74,7 +74,7 @@ function processMarketShareData(raw: RawMarket[]): ProcessedMarket {
           name: b.name,
           value: b.value,
           parent: c.category,
-          percent: 0 // will set later
+          percent: 0
         });
       });
     }
@@ -126,9 +126,9 @@ export function MarketShareChart({ rawData }: Props) {
      ------------------------- */
 
   const CustomPieTooltip = ({
-    active,
-    payload
-  }: {
+                              active,
+                              payload
+                            }: {
     active?: boolean;
     payload?: any[];
   }) => {
@@ -138,10 +138,14 @@ export function MarketShareChart({ rawData }: Props) {
 
     if (item.parent) {
       return (
-        <div className='rounded-md border border-slate-100 bg-white p-2 text-sm shadow-md'>
-          <div className='font-medium text-slate-800'>{item.name}</div>
-          <div className='text-xs text-slate-600'>Brand of {item.parent}</div>
-          <div className='mt-1 text-xs text-slate-700'>
+        <div className='rounded-2xl border border-slate-200/80 bg-white p-3 text-sm shadow-[0_8px_30px_rgba(15,23,42,0.08)] dark:border-slate-800 dark:bg-slate-900'>
+          <div className='font-semibold text-slate-950 dark:text-white'>
+            {item.name}
+          </div>
+          <div className='text-xs text-slate-600 dark:text-slate-400'>
+            Brand of {item.parent}
+          </div>
+          <div className='mt-1 text-xs text-slate-700 dark:text-slate-300'>
             {item.percent}% of market
           </div>
         </div>
@@ -149,9 +153,11 @@ export function MarketShareChart({ rawData }: Props) {
     }
 
     return (
-      <div className='rounded-md border border-slate-100 bg-white p-2 text-sm shadow-md'>
-        <div className='font-medium text-slate-800'>{item.name}</div>
-        <div className='mt-1 text-xs text-slate-700'>
+      <div className='rounded-2xl border border-slate-200/80 bg-white p-3 text-sm shadow-[0_8px_30px_rgba(15,23,42,0.08)] dark:border-slate-800 dark:bg-slate-900'>
+        <div className='font-semibold text-slate-950 dark:text-white'>
+          {item.name}
+        </div>
+        <div className='mt-1 text-xs text-slate-700 dark:text-slate-300'>
           {item.percent}% of market
         </div>
       </div>
@@ -159,21 +165,24 @@ export function MarketShareChart({ rawData }: Props) {
   };
 
   return (
-    <Card className='overflow-hidden dark:bg-slate-800'>
-      <CardHeader className='flex items-center justify-between'>
-        <CardTitle className='flex items-center gap-2 text-sm font-medium text-slate-700'>
-          <span className='inline-flex items-center justify-center rounded-full bg-amber-500 p-1.5'>
+    <Card className='group relative overflow-hidden rounded-[28px] border border-slate-200/80 bg-white shadow-[0_8px_30px_rgba(15,23,42,0.05)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md dark:border-slate-800 dark:bg-slate-900'>
+      {/* soft hover glow, similar to your MiniStat cards */}
+      <div className='pointer-events-none absolute right-0 top-0 h-24 w-24 translate-x-8 -translate-y-8 rounded-full bg-indigo-500/10 blur-2xl transition-opacity duration-300 group-hover:bg-indigo-500/15' />
+
+      <CardHeader className='relative flex items-center justify-between'>
+        <CardTitle className='flex items-center gap-2 text-sm font-medium text-slate-950 dark:text-white'>
+          <span className='inline-flex items-center justify-center rounded-full bg-amber-500 p-1.5 transition-transform duration-300 group-hover:scale-105'>
             <BarChart3 className='h-4 w-4 text-white' />
           </span>
           Market Share (Sunburst)
         </CardTitle>
 
-        <div className='text-xs font-medium text-slate-500'>
+        <div className='text-xs font-medium text-slate-600 transition-colors duration-300 group-hover:text-slate-700 dark:text-slate-400 dark:group-hover:text-slate-300'>
           Top categories & brands
         </div>
       </CardHeader>
 
-      <CardContent>
+      <CardContent className='relative'>
         <div className='h-56 w-full md:h-64'>
           <ResponsiveContainer width='100%' height='100%'>
             <PieChart>
@@ -233,7 +242,7 @@ export function MarketShareChart({ rawData }: Props) {
           </ResponsiveContainer>
         </div>
 
-        <div className='mt-3 text-xs text-slate-600'>
+        <div className='mt-3 text-xs text-slate-600 dark:text-slate-400'>
           Donut rings: outer = categories, inner = brands. Hover slices for
           exact %.
         </div>
