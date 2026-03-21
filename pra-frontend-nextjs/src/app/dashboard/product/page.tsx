@@ -72,21 +72,21 @@ export default function ProductListingPage() {
 
   return (
     <PageContainer>
-      <div className='min-h-full w-full bg-white p-4 text-slate-900 sm:p-6 dark:bg-slate-900 dark:text-slate-200'>
+      <div className='min-h-full w-full bg-slate-50 p-4 text-slate-900 sm:p-6 dark:bg-slate-950 dark:text-slate-100'>
         {/* Sticky header */}
-        <div className='sticky top-0 z-30 -mx-4 mb-4 border-b border-slate-200/70 bg-white/95 px-4 pt-4 pb-4 backdrop-blur sm:-mx-6 sm:px-6 dark:border-slate-700/70 dark:bg-slate-900/95'>
+        <div className='sticky top-0 z-30 -mx-4 mb-4 border-b border-slate-200/80 bg-slate-50/95 px-4 pt-4 pb-4 backdrop-blur sm:-mx-6 sm:px-6 dark:border-slate-800 dark:bg-slate-950/95'>
           <div className='flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between'>
             <div className='min-w-0'>
-              <h2 className='text-xl font-semibold text-slate-900 sm:text-2xl dark:text-white'>
+              <h2 className='text-2xl font-semibold tracking-tight text-slate-950 sm:text-3xl dark:text-white'>
                 Discover Products
               </h2>
-              <p className='mt-1 text-sm text-slate-600 dark:text-slate-400'>
+              <p className='mt-1 text-sm leading-6 text-slate-600 dark:text-slate-400'>
                 Curated & data-driven — find opportunities fast.
               </p>
             </div>
 
             <div className='flex w-full flex-col gap-3 sm:flex-row sm:items-center lg:w-auto'>
-              <div className='flex w-full items-center gap-2 rounded-md border border-slate-100 bg-slate-50 px-3 py-2 sm:w-72 dark:border-slate-700 dark:bg-slate-800'>
+              <div className='flex w-full items-center gap-2 rounded-2xl border border-slate-200/80 bg-white px-3 py-2 shadow-[0_8px_30px_rgba(15,23,42,0.05)] sm:w-72 dark:border-slate-800 dark:bg-slate-900'>
                 <Search className='h-4 w-4 shrink-0 text-slate-500 dark:text-slate-400' />
                 <Input
                   value={query}
@@ -96,7 +96,7 @@ export default function ProductListingPage() {
                 />
               </div>
 
-              <Button className='w-full bg-gradient-to-r from-indigo-500 to-teal-400 text-white shadow-md hover:from-indigo-600 hover:to-teal-500 sm:w-auto dark:from-indigo-400 dark:to-cyan-500'>
+              <Button className='w-full rounded-2xl bg-slate-950 text-white shadow-sm hover:bg-slate-800 sm:w-auto dark:bg-white dark:text-slate-950 dark:hover:bg-slate-200'>
                 <Link href='/dashboard/filtered-product'>Start Research</Link>
               </Button>
             </div>
@@ -135,7 +135,10 @@ export default function ProductListingPage() {
           <main className='min-w-0 md:col-span-3'>
             <div className='mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between'>
               <div className='text-sm text-slate-600 dark:text-slate-400'>
-                Showing <span className='font-medium'>{filtered.length}</span>{' '}
+                Showing{' '}
+                <span className='font-medium text-slate-900 dark:text-white'>
+                  {filtered.length}
+                </span>{' '}
                 results
               </div>
 
@@ -170,10 +173,13 @@ export default function ProductListingPage() {
           </main>
         </div>
 
-        <div className='mt-6 rounded-md border border-slate-100 bg-gradient-to-r from-white to-slate-50 p-3 text-sm text-slate-600 shadow-sm dark:border-slate-700 dark:from-slate-800 dark:to-slate-900 dark:text-slate-300'>
-          Tip: Tap <span className='font-medium'>Details</span> to view product
-          insights. Use lifecycle filters to focus on Trendy / Evergreen
-          opportunities.
+        <div className='mt-6 rounded-[28px] border border-slate-200/80 bg-gradient-to-r from-white via-white to-slate-50 p-3 text-sm leading-6 text-slate-600 shadow-[0_8px_30px_rgba(15,23,42,0.05)] dark:border-slate-800 dark:from-slate-950 dark:via-slate-950 dark:to-slate-900/90 dark:text-slate-400'>
+          Tip: Tap{' '}
+          <span className='font-medium text-slate-900 dark:text-white'>
+            Details
+          </span>{' '}
+          to view product insights. Use lifecycle filters to focus on Trendy /
+          Evergreen opportunities.
         </div>
       </div>
     </PageContainer>
