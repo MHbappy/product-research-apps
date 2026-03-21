@@ -25,6 +25,7 @@ import {
   Search,
   Lightbulb
 } from 'lucide-react';
+import PageContainer from '@/components/layout/page-container';
 
 /**
  * Dark-mode optimized dashboard overview
@@ -205,241 +206,253 @@ export function UserDashboardOverview() {
   ];
 
   return (
-    <div className='min-h-screen space-y-6 bg-slate-50 p-4 text-slate-900 dark:bg-slate-950 dark:text-slate-100'>
-      {/* Header */}
-      <div className='flex items-center justify-between gap-4'>
-        <div>
-          <h2 className='text-2xl font-semibold tracking-tight text-slate-950 dark:text-white'>
-            Welcome back,{' '}
-            <span className='text-indigo-600 dark:text-indigo-300'>
-              {user?.fullName || 'User'}
-            </span>
-          </h2>
-          <p className='text-sm leading-6 text-slate-600 dark:text-slate-400'>
-            Product intelligence overview — actionable insights & trending
-            signals
-          </p>
-        </div>
-
-        <div className='flex items-center gap-3'>
-          <Button className='rounded-2xl bg-slate-950 text-white shadow-sm hover:bg-slate-800 dark:bg-white dark:text-slate-950 dark:hover:bg-slate-200'>
-            <Link href='/dashboard/product'>Explore Products</Link>
-          </Button>
-
-          <Button
-            variant='ghost'
-            className='rounded-2xl border border-slate-200 bg-white text-slate-700 hover:bg-slate-50 hover:text-slate-950 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-300 dark:hover:bg-slate-800 dark:hover:text-white'
-          >
-            New Insight
-          </Button>
-        </div>
-      </div>
-
-      {/* KPI Cards */}
-      <div className='grid gap-4 md:grid-cols-2 lg:grid-cols-4'>
-        {/* Trending Products */}
-        <Card className='group relative overflow-hidden rounded-[28px] border border-slate-200/80 bg-white shadow-[0_8px_30px_rgba(15,23,42,0.05)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md dark:border-slate-800 dark:bg-slate-900'>
-          <div className='pointer-events-none absolute -top-6 -left-6 h-32 w-32 rounded-full bg-indigo-200/30 opacity-60 blur-3xl transition-all duration-300 group-hover:bg-indigo-200/40 dark:bg-indigo-500/10 dark:group-hover:bg-indigo-500/15' />
-          <CardHeader className='flex items-center justify-between'>
-            <CardTitle className='flex items-center gap-2 text-sm font-medium text-slate-700 dark:text-slate-200'>
-              <span className='inline-flex items-center justify-center rounded-full bg-indigo-600 p-1.5 transition-transform duration-300 group-hover:scale-105'>
-                <TrendingUp className='h-4 w-4 text-white' />
+    <PageContainer>
+      <div className='min-h-full w-full space-y-6 bg-slate-50 p-4 text-slate-900 sm:p-6 dark:bg-slate-950 dark:text-slate-100'>
+        {/* Header */}
+        <div className='flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between'>
+          <div className='min-w-0'>
+            <h2 className='text-2xl font-semibold tracking-tight text-slate-950 sm:text-3xl dark:text-white'>
+              Welcome back,{' '}
+              <span className='text-indigo-600 dark:text-indigo-300'>
+                {user?.fullName || 'User'}
               </span>
-              Trending Products
-            </CardTitle>
-            <div className='text-xs font-medium text-indigo-600 dark:text-indigo-300'>
-              +18%
-            </div>
-          </CardHeader>
-
-          <CardContent>
-            <div className='text-2xl font-bold text-slate-950 dark:text-white'>
-              124
-            </div>
-            <p className='mt-1 text-xs text-slate-600 dark:text-slate-400'>
-              Products with rising demand this week
+            </h2>
+            <p className='mt-1 text-sm leading-6 text-slate-600 dark:text-slate-400'>
+              Product intelligence overview — actionable insights & trending
+              signals
             </p>
-          </CardContent>
-        </Card>
+          </div>
 
-        {/* Products Tracked */}
-        <Card className='group relative overflow-hidden rounded-[28px] border border-slate-200/80 bg-white shadow-[0_8px_30px_rgba(15,23,42,0.05)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md dark:border-slate-800 dark:bg-slate-900'>
-          <div className='pointer-events-none absolute -right-6 -bottom-6 h-28 w-28 rounded-full bg-emerald-200/20 opacity-60 blur-3xl transition-all duration-300 group-hover:bg-emerald-200/30 dark:bg-emerald-500/10 dark:group-hover:bg-emerald-500/15' />
-          <CardHeader className='flex items-center justify-between'>
-            <CardTitle className='flex items-center gap-2 text-sm font-medium text-slate-700 dark:text-slate-200'>
-              <span className='inline-flex items-center justify-center rounded-full bg-emerald-600 p-1.5 transition-transform duration-300 group-hover:scale-105'>
-                <Package className='h-4 w-4 text-white' />
-              </span>
-              Products Tracked
-            </CardTitle>
-            <div className='text-xs font-medium text-emerald-600 dark:text-emerald-300'>
-              All marketplaces
-            </div>
-          </CardHeader>
-
-          <CardContent>
-            <div className='text-2xl font-bold text-slate-950 dark:text-white'>
-              2,431
-            </div>
-            <p className='mt-1 text-xs text-slate-600 dark:text-slate-400'>
-              Active SKUs across sources
-            </p>
-          </CardContent>
-        </Card>
-
-        {/* Market Insights */}
-        <Card className='group relative overflow-hidden rounded-[28px] border border-slate-200/80 bg-white shadow-[0_8px_30px_rgba(15,23,42,0.05)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md dark:border-slate-800 dark:bg-slate-900'>
-          <div className='pointer-events-none absolute -bottom-6 -left-6 h-28 w-28 rounded-full bg-amber-200/25 opacity-60 blur-3xl transition-all duration-300 group-hover:bg-amber-200/35 dark:bg-amber-500/10 dark:group-hover:bg-amber-500/15' />
-          <CardHeader className='flex items-center justify-between'>
-            <CardTitle className='flex items-center gap-2 text-sm font-medium text-slate-700 dark:text-slate-200'>
-              <span className='inline-flex items-center justify-center rounded-full bg-amber-500 p-1.5 transition-transform duration-300 group-hover:scale-105'>
-                <BarChart3 className='h-4 w-4 text-white' />
-              </span>
-              Market Insights
-            </CardTitle>
-            <div className='text-xs font-medium text-amber-600 dark:text-amber-300'>
-              This week
-            </div>
-          </CardHeader>
-
-          <CardContent>
-            <div className='text-2xl font-bold text-slate-950 dark:text-white'>
-              58
-            </div>
-            <p className='mt-1 text-xs text-slate-600 dark:text-slate-400'>
-              Signals generated by AI
-            </p>
-          </CardContent>
-        </Card>
-
-        {/* Opportunities */}
-        <Card className='group relative overflow-hidden rounded-[28px] border border-slate-200/80 bg-white shadow-[0_8px_30px_rgba(15,23,42,0.05)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md dark:border-slate-800 dark:bg-slate-900'>
-          <div className='pointer-events-none absolute -top-6 -right-6 h-32 w-32 rounded-full bg-pink-200/30 opacity-60 blur-3xl transition-all duration-300 group-hover:bg-pink-200/40 dark:bg-pink-500/10 dark:group-hover:bg-pink-500/15' />
-          <CardHeader className='flex items-center justify-between'>
-            <CardTitle className='flex items-center gap-2 text-sm font-medium text-slate-700 dark:text-slate-200'>
-              <span className='inline-flex items-center justify-center rounded-full bg-pink-600 p-1.5 transition-transform duration-300 group-hover:scale-105'>
-                <Lightbulb className='h-4 w-4 text-white' />
-              </span>
-              Opportunities
-            </CardTitle>
-            <div className='text-xs font-medium text-pink-600 dark:text-pink-300'>
-              High priority
-            </div>
-          </CardHeader>
-
-          <CardContent>
-            <div className='text-2xl font-bold text-slate-950 dark:text-white'>
-              16
-            </div>
-            <p className='mt-1 text-xs text-slate-600 dark:text-slate-400'>
-              Niches with rising demand
-            </p>
-          </CardContent>
-        </Card>
-      </div>
-
-      {/* Two-chart row */}
-      <div className='grid gap-4 md:grid-cols-2'>
-        <div>
-          <CategoryDemandChart rawData={categoryDemandRaw} top={6} />
-        </div>
-
-        <div>
-          <MarketShareChart rawData={marketShareRaw} />
-        </div>
-      </div>
-
-      {/* Time series */}
-      <div className='grid gap-4 md:grid-cols-2'>
-        <div>
-          <TimeSeriesChart rawData={timeSeriesRaw} />
-        </div>
-        <div>
-          <ProductOpportunityQuadrant
-            rawData={dummyProducts}
-            invertYAxis={true}
-          />
-        </div>
-      </div>
-
-      {/* Research Tools */}
-      <div className='grid gap-4 md:grid-cols-2 lg:grid-cols-3'>
-        <Card className='group relative overflow-hidden rounded-[28px] border border-slate-200/80 bg-white shadow-[0_8px_30px_rgba(15,23,42,0.05)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md dark:border-slate-800 dark:bg-slate-900'>
-          <div className='pointer-events-none absolute -top-6 -left-6 h-28 w-28 rounded-full bg-slate-200/30 opacity-60 blur-3xl transition-all duration-300 group-hover:bg-slate-200/40 dark:bg-slate-500/10 dark:group-hover:bg-slate-500/15' />
-          <CardHeader>
-            <CardTitle className='text-slate-950 dark:text-white'>
-              Product Research
-            </CardTitle>
-            <CardDescription className='text-slate-600 dark:text-slate-400'>
-              Discover trending products across marketplaces
-            </CardDescription>
-          </CardHeader>
-
-          <CardContent>
-            <Button className='flex w-full items-center justify-center gap-2 rounded-2xl bg-slate-950 text-white shadow-sm hover:bg-slate-800 dark:bg-white dark:text-slate-950 dark:hover:bg-slate-200'>
-              <Search className='h-4 w-4' />
-              <Link href='/dashboard/research'>Start Research</Link>
-            </Button>
-          </CardContent>
-        </Card>
-
-        <Card className='group relative overflow-hidden rounded-[28px] border border-slate-200/80 bg-white shadow-[0_8px_30px_rgba(15,23,42,0.05)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md dark:border-slate-800 dark:bg-slate-900'>
-          <div className='pointer-events-none absolute -top-6 -right-6 h-28 w-28 rounded-full bg-slate-200/30 opacity-60 blur-3xl transition-all duration-300 group-hover:bg-slate-200/40 dark:bg-slate-500/10 dark:group-hover:bg-slate-500/15' />
-          <CardHeader>
-            <CardTitle className='text-slate-950 dark:text-white'>
-              Market Trends
-            </CardTitle>
-            <CardDescription className='text-slate-600 dark:text-slate-400'>
-              Analyze demand patterns and competition
-            </CardDescription>
-          </CardHeader>
-
-          <CardContent>
-            <Button
-              variant='outline'
-              className='w-full rounded-2xl border-slate-200 bg-white text-slate-700 shadow-sm hover:bg-slate-50 hover:text-slate-950 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-300 dark:hover:bg-slate-800 dark:hover:text-white'
-            >
-              <Link href='/dashboard/trends'>View Trends</Link>
-            </Button>
-          </CardContent>
-        </Card>
-
-        <Card className='group relative overflow-hidden rounded-[28px] border border-slate-200/80 bg-white shadow-[0_8px_30px_rgba(15,23,42,0.05)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md dark:border-slate-800 dark:bg-slate-900'>
-          <div className='pointer-events-none absolute -top-6 -right-6 h-28 w-28 rounded-full bg-slate-200/30 opacity-60 blur-3xl transition-all duration-300 group-hover:bg-slate-200/40 dark:bg-slate-500/10 dark:group-hover:bg-slate-500/15' />
-          <CardHeader>
-            <CardTitle className='text-slate-950 dark:text-white'>
-              Account Status
-            </CardTitle>
-            <CardDescription className='text-slate-600 dark:text-slate-400'>
-              Your account & billing
-            </CardDescription>
-          </CardHeader>
-
-          <CardContent className='flex items-center justify-between'>
-            <Badge
-              variant='secondary'
-              className='border border-slate-200 bg-white text-slate-700 shadow-sm dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300'
-            >
-              {user?.status || 'Active'}
-            </Badge>
-
+          <div className='flex w-full flex-col gap-3 sm:flex-row sm:items-center lg:w-auto'>
             <Button
               asChild
-              size='sm'
-              className='rounded-2xl border border-slate-200 bg-white text-slate-700 shadow-sm hover:bg-slate-50 hover:text-slate-950 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300 dark:hover:bg-slate-800 dark:hover:text-white'
+              className='w-full rounded-2xl bg-slate-950 text-white shadow-sm hover:bg-slate-800 sm:w-auto dark:bg-white dark:text-slate-950 dark:hover:bg-slate-200'
             >
-              <Link href='/dashboard/billing'>Manage Plan</Link>
+              <Link href='/dashboard/product'>Explore Products</Link>
             </Button>
-          </CardContent>
-        </Card>
-      </div>
 
-      {/* Footer tip */}
-      <div className='rounded-[28px] border border-slate-200/80 bg-gradient-to-r from-white via-white to-slate-50 p-3 text-sm leading-6 text-slate-600 shadow-[0_8px_30px_rgba(15,23,42,0.05)] dark:border-slate-800 dark:from-slate-950 dark:via-slate-950 dark:to-slate-900/90 dark:text-slate-400'>
-        Tip: Use our color-coded KPI cards to quickly scan performance —
-        gradients and soft shadows improve visual hierarchy. In dark mode cards
-        use deeper backgrounds with subtle glows to keep contrast comfortable.
+            <Button
+              variant='ghost'
+              className='w-full rounded-2xl border border-slate-200 bg-white text-slate-700 hover:bg-slate-50 hover:text-slate-950 sm:w-auto dark:border-slate-800 dark:bg-slate-900 dark:text-slate-300 dark:hover:bg-slate-800 dark:hover:text-white'
+            >
+              New Insight
+            </Button>
+          </div>
+        </div>
+
+        {/* KPI Cards */}
+        <div className='grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4'>
+          {/* Trending Products */}
+          <Card className='group relative overflow-hidden rounded-[28px] border border-slate-200/80 bg-white shadow-[0_8px_30px_rgba(15,23,42,0.05)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md dark:border-slate-800 dark:bg-slate-900'>
+            <div className='pointer-events-none absolute -top-6 -left-6 h-32 w-32 rounded-full bg-indigo-200/30 opacity-60 blur-3xl transition-all duration-300 group-hover:bg-indigo-200/40 dark:bg-indigo-500/10 dark:group-hover:bg-indigo-500/15' />
+            <CardHeader className='flex items-center justify-between gap-3'>
+              <CardTitle className='flex items-center gap-2 text-sm font-medium text-slate-700 dark:text-slate-200'>
+                <span className='inline-flex items-center justify-center rounded-full bg-indigo-600 p-1.5 transition-transform duration-300 group-hover:scale-105'>
+                  <TrendingUp className='h-4 w-4 text-white' />
+                </span>
+                Trending Products
+              </CardTitle>
+              <div className='shrink-0 text-xs font-medium text-indigo-600 dark:text-indigo-300'>
+                +18%
+              </div>
+            </CardHeader>
+
+            <CardContent>
+              <div className='text-2xl font-bold text-slate-950 dark:text-white'>
+                124
+              </div>
+              <p className='mt-1 text-xs text-slate-600 dark:text-slate-400'>
+                Products with rising demand this week
+              </p>
+            </CardContent>
+          </Card>
+
+          {/* Products Tracked */}
+          <Card className='group relative overflow-hidden rounded-[28px] border border-slate-200/80 bg-white shadow-[0_8px_30px_rgba(15,23,42,0.05)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md dark:border-slate-800 dark:bg-slate-900'>
+            <div className='pointer-events-none absolute -right-6 -bottom-6 h-28 w-28 rounded-full bg-emerald-200/20 opacity-60 blur-3xl transition-all duration-300 group-hover:bg-emerald-200/30 dark:bg-emerald-500/10 dark:group-hover:bg-emerald-500/15' />
+            <CardHeader className='flex items-center justify-between gap-3'>
+              <CardTitle className='flex items-center gap-2 text-sm font-medium text-slate-700 dark:text-slate-200'>
+                <span className='inline-flex items-center justify-center rounded-full bg-emerald-600 p-1.5 transition-transform duration-300 group-hover:scale-105'>
+                  <Package className='h-4 w-4 text-white' />
+                </span>
+                Products Tracked
+              </CardTitle>
+              <div className='shrink-0 text-xs font-medium text-emerald-600 dark:text-emerald-300'>
+                All marketplaces
+              </div>
+            </CardHeader>
+
+            <CardContent>
+              <div className='text-2xl font-bold text-slate-950 dark:text-white'>
+                2,431
+              </div>
+              <p className='mt-1 text-xs text-slate-600 dark:text-slate-400'>
+                Active SKUs across sources
+              </p>
+            </CardContent>
+          </Card>
+
+          {/* Market Insights */}
+          <Card className='group relative overflow-hidden rounded-[28px] border border-slate-200/80 bg-white shadow-[0_8px_30px_rgba(15,23,42,0.05)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md dark:border-slate-800 dark:bg-slate-900'>
+            <div className='pointer-events-none absolute -bottom-6 -left-6 h-28 w-28 rounded-full bg-amber-200/25 opacity-60 blur-3xl transition-all duration-300 group-hover:bg-amber-200/35 dark:bg-amber-500/10 dark:group-hover:bg-amber-500/15' />
+            <CardHeader className='flex items-center justify-between gap-3'>
+              <CardTitle className='flex items-center gap-2 text-sm font-medium text-slate-700 dark:text-slate-200'>
+                <span className='inline-flex items-center justify-center rounded-full bg-amber-500 p-1.5 transition-transform duration-300 group-hover:scale-105'>
+                  <BarChart3 className='h-4 w-4 text-white' />
+                </span>
+                Market Insights
+              </CardTitle>
+              <div className='shrink-0 text-xs font-medium text-amber-600 dark:text-amber-300'>
+                This week
+              </div>
+            </CardHeader>
+
+            <CardContent>
+              <div className='text-2xl font-bold text-slate-950 dark:text-white'>
+                58
+              </div>
+              <p className='mt-1 text-xs text-slate-600 dark:text-slate-400'>
+                Signals generated by AI
+              </p>
+            </CardContent>
+          </Card>
+
+          {/* Opportunities */}
+          <Card className='group relative overflow-hidden rounded-[28px] border border-slate-200/80 bg-white shadow-[0_8px_30px_rgba(15,23,42,0.05)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md dark:border-slate-800 dark:bg-slate-900'>
+            <div className='pointer-events-none absolute -top-6 -right-6 h-32 w-32 rounded-full bg-pink-200/30 opacity-60 blur-3xl transition-all duration-300 group-hover:bg-pink-200/40 dark:bg-pink-500/10 dark:group-hover:bg-pink-500/15' />
+            <CardHeader className='flex items-center justify-between gap-3'>
+              <CardTitle className='flex items-center gap-2 text-sm font-medium text-slate-700 dark:text-slate-200'>
+                <span className='inline-flex items-center justify-center rounded-full bg-pink-600 p-1.5 transition-transform duration-300 group-hover:scale-105'>
+                  <Lightbulb className='h-4 w-4 text-white' />
+                </span>
+                Opportunities
+              </CardTitle>
+              <div className='shrink-0 text-xs font-medium text-pink-600 dark:text-pink-300'>
+                High priority
+              </div>
+            </CardHeader>
+
+            <CardContent>
+              <div className='text-2xl font-bold text-slate-950 dark:text-white'>
+                16
+              </div>
+              <p className='mt-1 text-xs text-slate-600 dark:text-slate-400'>
+                Niches with rising demand
+              </p>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Two-chart row */}
+        <div className='grid grid-cols-1 gap-4 md:grid-cols-2'>
+          <div className='min-w-0'>
+            <CategoryDemandChart rawData={categoryDemandRaw} top={6} />
+          </div>
+
+          <div className='min-w-0'>
+            <MarketShareChart rawData={marketShareRaw} />
+          </div>
+        </div>
+
+        {/* Time series */}
+        <div className='grid grid-cols-1 gap-4 md:grid-cols-2'>
+          <div className='min-w-0'>
+            <TimeSeriesChart rawData={timeSeriesRaw} />
+          </div>
+          <div className='min-w-0'>
+            <ProductOpportunityQuadrant
+              rawData={dummyProducts}
+              invertYAxis={true}
+            />
+          </div>
+        </div>
+
+        {/* Research Tools */}
+        <div className='grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3'>
+          <Card className='group relative overflow-hidden rounded-[28px] border border-slate-200/80 bg-white shadow-[0_8px_30px_rgba(15,23,42,0.05)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md dark:border-slate-800 dark:bg-slate-900'>
+            <div className='pointer-events-none absolute -top-6 -left-6 h-28 w-28 rounded-full bg-slate-200/30 opacity-60 blur-3xl transition-all duration-300 group-hover:bg-slate-200/40 dark:bg-slate-500/10 dark:group-hover:bg-slate-500/15' />
+            <CardHeader>
+              <CardTitle className='text-slate-950 dark:text-white'>
+                Product Research
+              </CardTitle>
+              <CardDescription className='text-slate-600 dark:text-slate-400'>
+                Discover trending products across marketplaces
+              </CardDescription>
+            </CardHeader>
+
+            <CardContent>
+              <Button
+                asChild
+                className='flex w-full items-center justify-center gap-2 rounded-2xl bg-slate-950 text-white shadow-sm hover:bg-slate-800 dark:bg-white dark:text-slate-950 dark:hover:bg-slate-200'
+              >
+                <Link href='/dashboard/research'>
+                  <Search className='h-4 w-4' />
+                  <span>Start Research</span>
+                </Link>
+              </Button>
+            </CardContent>
+          </Card>
+
+          <Card className='group relative overflow-hidden rounded-[28px] border border-slate-200/80 bg-white shadow-[0_8px_30px_rgba(15,23,42,0.05)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md dark:border-slate-800 dark:bg-slate-900'>
+            <div className='pointer-events-none absolute -top-6 -right-6 h-28 w-28 rounded-full bg-slate-200/30 opacity-60 blur-3xl transition-all duration-300 group-hover:bg-slate-200/40 dark:bg-slate-500/10 dark:group-hover:bg-slate-500/15' />
+            <CardHeader>
+              <CardTitle className='text-slate-950 dark:text-white'>
+                Market Trends
+              </CardTitle>
+              <CardDescription className='text-slate-600 dark:text-slate-400'>
+                Analyze demand patterns and competition
+              </CardDescription>
+            </CardHeader>
+
+            <CardContent>
+              <Button
+                asChild
+                variant='outline'
+                className='w-full rounded-2xl border-slate-200 bg-white text-slate-700 shadow-sm hover:bg-slate-50 hover:text-slate-950 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-300 dark:hover:bg-slate-800 dark:hover:text-white'
+              >
+                <Link href='/dashboard/trends'>View Trends</Link>
+              </Button>
+            </CardContent>
+          </Card>
+
+          <Card className='group relative overflow-hidden rounded-[28px] border border-slate-200/80 bg-white shadow-[0_8px_30px_rgba(15,23,42,0.05)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md dark:border-slate-800 dark:bg-slate-900'>
+            <div className='pointer-events-none absolute -top-6 -right-6 h-28 w-28 rounded-full bg-slate-200/30 opacity-60 blur-3xl transition-all duration-300 group-hover:bg-slate-200/40 dark:bg-slate-500/10 dark:group-hover:bg-slate-500/15' />
+            <CardHeader>
+              <CardTitle className='text-slate-950 dark:text-white'>
+                Account Status
+              </CardTitle>
+              <CardDescription className='text-slate-600 dark:text-slate-400'>
+                Your account & billing
+              </CardDescription>
+            </CardHeader>
+
+            <CardContent className='flex items-center justify-between gap-3'>
+              <Badge
+                variant='secondary'
+                className='border border-slate-200 bg-white text-slate-700 shadow-sm dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300'
+              >
+                {user?.status || 'Active'}
+              </Badge>
+
+              <Button
+                asChild
+                size='sm'
+                className='rounded-2xl border border-slate-200 bg-white text-slate-700 shadow-sm hover:bg-slate-50 hover:text-slate-950 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300 dark:hover:bg-slate-800 dark:hover:text-white'
+              >
+                <Link href='/dashboard/billing'>Manage Plan</Link>
+              </Button>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Footer tip */}
+        <div className='rounded-[28px] border border-slate-200/80 bg-gradient-to-r from-white via-white to-slate-50 p-3 text-sm leading-6 text-slate-600 shadow-[0_8px_30px_rgba(15,23,42,0.05)] dark:border-slate-800 dark:from-slate-950 dark:via-slate-950 dark:to-slate-900/90 dark:text-slate-400'>
+          Tip: Use our color-coded KPI cards to quickly scan performance —
+          gradients and soft shadows improve visual hierarchy. In dark mode
+          cards use deeper backgrounds with subtle glows to keep contrast
+          comfortable.
+        </div>
       </div>
-    </div>
+    </PageContainer>
   );
 }
