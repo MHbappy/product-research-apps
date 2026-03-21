@@ -15,7 +15,7 @@ type Props = {
 export function ProductCard({ product }: Props) {
   return (
     <article className='h-full'>
-      <Card className='group h-full overflow-hidden border border-slate-200 bg-white shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg dark:border-slate-700 dark:bg-slate-800'>
+      <Card className='group h-full overflow-hidden border border-slate-200/80 bg-white shadow-[0_8px_30px_rgba(15,23,42,0.05)] transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg dark:border-slate-800 dark:bg-slate-900'>
         <CardContent className='flex h-full flex-col p-3'>
           <div className='flex gap-2.5'>
             <div
@@ -28,19 +28,19 @@ export function ProductCard({ product }: Props) {
               <div className='flex items-start justify-between gap-2'>
                 <div className='min-w-0 flex-1'>
                   <h3
-                    className='line-clamp-2 text-[13px] leading-[1.25rem] font-semibold text-slate-900 dark:text-slate-100'
+                    className='line-clamp-2 text-[13px] leading-[1.25rem] font-semibold text-slate-950 dark:text-white'
                     title={product.name}
                   >
                     {product.name}
                   </h3>
 
-                  <div className='mt-[2px] truncate text-[11px] text-slate-500 dark:text-slate-400'>
+                  <div className='mt-[2px] truncate text-[11px] text-slate-600 dark:text-slate-400'>
                     {product.category}
                   </div>
                 </div>
 
                 <div className='shrink-0 text-right'>
-                  <div className='text-sm font-semibold text-slate-900 tabular-nums dark:text-slate-100'>
+                  <div className='text-sm font-semibold text-slate-950 tabular-nums dark:text-white'>
                     ${(product.price ?? 0).toFixed(2)}
                   </div>
 
@@ -77,7 +77,7 @@ export function ProductCard({ product }: Props) {
           </div>
 
           <div className='mt-auto pt-2'>
-            <div className='text-[11px] text-slate-500 dark:text-slate-400'>
+            <div className='text-[11px] text-slate-600 dark:text-slate-400'>
               Demand{' '}
               <span className='font-medium text-slate-700 tabular-nums dark:text-slate-200'>
                 {formatCompactNumber(product.demand)}
@@ -89,7 +89,7 @@ export function ProductCard({ product }: Props) {
                 <Button
                   size='sm'
                   variant='ghost'
-                  className='h-7 px-2 text-[12px]'
+                  className='h-7 px-2 text-[12px] text-slate-700 hover:bg-slate-100 hover:text-slate-950 dark:text-slate-300 dark:hover:bg-slate-800 dark:hover:text-white'
                   asChild
                 >
                   <Link href={`/dashboard/product/${product.id}`}>
@@ -104,13 +104,13 @@ export function ProductCard({ product }: Props) {
                   size='sm'
                   variant='outline'
                   aria-label={`save ${product.name}`}
-                  className='h-7 w-7 p-0'
+                  className='h-7 w-7 border-slate-200 bg-white p-0 text-slate-700 hover:bg-slate-50 hover:text-slate-950 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300 dark:hover:bg-slate-800 dark:hover:text-white'
                 >
                   <Heart className='h-3.5 w-3.5' />
                 </Button>
               </div>
 
-              <div className='inline-flex h-6 items-center rounded-full border border-slate-200 px-2 text-[10px] text-slate-500 dark:border-slate-700 dark:text-slate-300'>
+              <div className='inline-flex h-6 items-center rounded-full border border-slate-200 bg-white px-2 text-[10px] text-slate-500 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300'>
                 {product.score >= 85
                   ? 'Top'
                   : product.score >= 70
