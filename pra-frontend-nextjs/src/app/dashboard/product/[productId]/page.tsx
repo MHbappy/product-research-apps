@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useMemo } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import { ArrowLeft, Eye, Heart } from 'lucide-react';
@@ -29,6 +29,7 @@ import SentimentTrendChart from '@/components/sentiment-trend-chart';
 import StarDistributionChart from '@/components/star-distribution-chart';
 import StabilityDiagnosticChart from '@/components/stability-diagnostic-chart';
 import { SoftPill } from '@/shared/product-details.shared';
+import ProductDetailsPageSkeleton from '@/components/product-details-skeleton-loader';
 
 export default function ProductDetailsPage() {
   const params = useParams<{ id?: string | string[] }>();
@@ -142,6 +143,17 @@ export default function ProductDetailsPage() {
       : latestStability.slope_12 > 0.05
         ? 'Stable up'
         : 'Flat';
+
+  const [isLoadingPage, setIsLoadingPage] = useState(true);
+
+  useEffect(() => {
+    const t = setTimeout(() => setIsLoadingPage(false), 1500);
+    return () => clearTimeout(t);
+  }, []);
+
+  if (isLoadingPage) {
+    return <ProductDetailsPageSkeleton />;
+  }
 
   return (
     <PageContainer>
