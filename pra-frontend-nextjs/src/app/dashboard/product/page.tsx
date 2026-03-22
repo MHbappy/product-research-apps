@@ -183,7 +183,7 @@ export default function ProductListingPage() {
                   asChild
                   className='flex-1 rounded-2xl bg-slate-950 text-white shadow-sm hover:bg-slate-800 sm:w-auto sm:flex-none dark:bg-white dark:text-slate-950 dark:hover:bg-slate-200'
                 >
-                  <Link href='/dashboard/filtered-product'>Start Research</Link>
+                  <Link href='/dashboard/filtered-product'>Smart Search</Link>
                 </Button>
               </div>
             </div>
