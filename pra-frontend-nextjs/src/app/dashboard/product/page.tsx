@@ -19,6 +19,7 @@ import {
   SheetTitle,
   SheetDescription
 } from '@/components/ui/sheet';
+import { ProductListingPageSkeleton } from '@/components/product-skeleton-loader';
 
 export default function ProductListingPage() {
   const {
@@ -77,6 +78,17 @@ export default function ProductListingPage() {
       setIsPaginating(false);
     }, 3500);
   };
+
+  const [isLoadingPage, setIsLoadingPage] = useState(true);
+
+  useEffect(() => {
+    const t = setTimeout(() => setIsLoadingPage(false), 1500);
+    return () => clearTimeout(t);
+  }, []);
+
+  if (isLoadingPage) {
+    return <ProductListingPageSkeleton />;
+  }
 
   return (
     <PageContainer>
