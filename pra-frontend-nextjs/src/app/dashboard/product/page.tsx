@@ -94,15 +94,15 @@ export default function ProductListingPage() {
             </div>
 
             <div className='flex w-full flex-col gap-3 sm:flex-row sm:items-center lg:w-auto'>
-              <div className='flex w-full items-center gap-2 rounded-2xl border border-slate-200/80 bg-white px-3 py-2 shadow-[0_8px_30px_rgba(15,23,42,0.05)] sm:w-72 dark:border-slate-800 dark:bg-slate-900'>
-                <Search className='h-4 w-4 shrink-0 text-slate-500 dark:text-slate-400' />
-                <Input
-                  value={query}
-                  onChange={(e) => setQuery(e.target.value)}
-                  placeholder='Search products, categories...'
-                  className='h-8 border-0 bg-transparent p-0 shadow-none focus-visible:ring-0 focus-visible:ring-offset-0'
-                />
-              </div>
+              {/*<div className='flex w-full items-center gap-2 rounded-2xl border border-slate-200/80 bg-white px-3 py-2 shadow-[0_8px_30px_rgba(15,23,42,0.05)] sm:w-72 dark:border-slate-800 dark:bg-slate-900'>*/}
+              {/*  <Search className='h-4 w-4 shrink-0 text-slate-500 dark:text-slate-400' />*/}
+              {/*  <Input*/}
+              {/*    value={query}*/}
+              {/*    onChange={(e) => setQuery(e.target.value)}*/}
+              {/*    placeholder='Search products, categories...'*/}
+              {/*    className='h-8 border-0 bg-transparent p-0 shadow-none focus-visible:ring-0 focus-visible:ring-offset-0'*/}
+              {/*  />*/}
+              {/*</div>*/}
 
               <div className='flex w-full gap-3 sm:w-auto'>
                 <Sheet
@@ -161,6 +161,12 @@ export default function ProductListingPage() {
                   </SheetContent>
                 </Sheet>
 
+                <Button
+                  asChild
+                  className='flex-1 rounded-2xl bg-slate-950 text-white shadow-sm hover:bg-slate-800 sm:w-auto sm:flex-none dark:bg-white dark:text-slate-950 dark:hover:bg-slate-200'
+                >
+                  <Link href='/dashboard/seller'>Seller Info</Link>
+                </Button>
                 <Button
                   asChild
                   className='flex-1 rounded-2xl bg-slate-950 text-white shadow-sm hover:bg-slate-800 sm:w-auto sm:flex-none dark:bg-white dark:text-slate-950 dark:hover:bg-slate-200'
