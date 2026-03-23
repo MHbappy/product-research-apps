@@ -104,7 +104,7 @@ export default function ProductListingPage() {
               </p>
             </div>
 
-            <div className='grid w-full grid-cols-1 gap-3 sm:grid-cols-2 lg:w-auto'>
+            <div className='grid w-full grid-cols-3 gap-2 sm:flex sm:w-auto sm:gap-3'>
               <Sheet
                 open={mobileFiltersOpen}
                 onOpenChange={setMobileFiltersOpen}
@@ -113,9 +113,9 @@ export default function ProductListingPage() {
                   type='button'
                   variant='outline'
                   onClick={() => setMobileFiltersOpen(true)}
-                  className='w-full min-w-0 rounded-2xl border-slate-200 bg-white text-slate-700 shadow-sm hover:bg-slate-50 hover:text-slate-950 sm:hidden dark:border-slate-800 dark:bg-slate-900 dark:text-slate-300 dark:hover:bg-slate-800 dark:hover:text-white'
+                  className='w-full min-w-0 rounded-xl border-slate-200 bg-white px-2 py-2 text-[11px] font-medium text-slate-700 shadow-sm hover:bg-slate-50 hover:text-slate-950 sm:hidden dark:border-slate-800 dark:bg-slate-900 dark:text-slate-300 dark:hover:bg-slate-800 dark:hover:text-white'
                 >
-                  <SlidersHorizontal className='mr-2 h-4 w-4 shrink-0' />
+                  <SlidersHorizontal className='mr-1 h-3.5 w-3.5 shrink-0' />
                   Filters
                 </Button>
 
@@ -163,16 +163,22 @@ export default function ProductListingPage() {
 
               <Button
                 asChild
-                className='w-full min-w-0 rounded-2xl bg-slate-950 text-white shadow-sm hover:bg-slate-800 dark:bg-white dark:text-slate-950 dark:hover:bg-slate-200'
+                className='w-full min-w-0 rounded-xl bg-slate-950 px-2 py-2 text-[11px] font-medium text-white shadow-sm hover:bg-slate-800 sm:w-auto sm:rounded-2xl sm:px-4 sm:py-2.5 sm:text-sm dark:bg-white dark:text-slate-950 dark:hover:bg-slate-200'
               >
-                <Link href='/dashboard/seller'>Seller Info</Link>
+                <Link href='/dashboard/seller'>
+                  <span className='sm:hidden'>Seller</span>
+                  <span className='hidden sm:inline'>Seller Info</span>
+                </Link>
               </Button>
 
               <Button
                 asChild
-                className='w-full min-w-0 rounded-2xl bg-slate-950 text-white shadow-sm hover:bg-slate-800 dark:bg-white dark:text-slate-950 dark:hover:bg-slate-200'
+                className='w-full min-w-0 rounded-xl bg-slate-950 px-2 py-2 text-[11px] font-medium text-white shadow-sm hover:bg-slate-800 sm:w-auto sm:rounded-2xl sm:px-4 sm:py-2.5 sm:text-sm dark:bg-white dark:text-slate-950 dark:hover:bg-slate-200'
               >
-                <Link href='/dashboard/filtered-product'>Smart Search</Link>
+                <Link href='/dashboard/filtered-product'>
+                  <span className='sm:hidden'>Smart Search</span>
+                  <span className='hidden sm:inline'>Smart Search</span>
+                </Link>
               </Button>
             </div>
           </div>
