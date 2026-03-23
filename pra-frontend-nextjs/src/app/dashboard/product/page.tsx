@@ -104,7 +104,7 @@ export default function ProductListingPage() {
               </p>
             </div>
 
-            <div className='grid w-full grid-cols-1 gap-3 sm:grid-cols-3 lg:w-auto'>
+            <div className='grid w-full grid-cols-1 gap-3 sm:grid-cols-2 lg:w-auto'>
               <Sheet
                 open={mobileFiltersOpen}
                 onOpenChange={setMobileFiltersOpen}
@@ -113,7 +113,7 @@ export default function ProductListingPage() {
                   type='button'
                   variant='outline'
                   onClick={() => setMobileFiltersOpen(true)}
-                  className='w-full min-w-0 rounded-2xl border-slate-200 bg-white text-slate-700 shadow-sm hover:bg-slate-50 hover:text-slate-950 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-300 dark:hover:bg-slate-800 dark:hover:text-white'
+                  className='w-full min-w-0 rounded-2xl border-slate-200 bg-white text-slate-700 shadow-sm hover:bg-slate-50 hover:text-slate-950 sm:hidden dark:border-slate-800 dark:bg-slate-900 dark:text-slate-300 dark:hover:bg-slate-800 dark:hover:text-white'
                 >
                   <SlidersHorizontal className='mr-2 h-4 w-4 shrink-0' />
                   Filters
