@@ -166,7 +166,7 @@ export default function ProductListingPage() {
                 className='w-full min-w-0 rounded-xl bg-slate-950 px-2 py-2 text-[11px] font-medium text-white shadow-sm hover:bg-slate-800 sm:w-auto sm:rounded-2xl sm:px-4 sm:py-2.5 sm:text-sm dark:bg-white dark:text-slate-950 dark:hover:bg-slate-200'
               >
                 <Link href='/dashboard/seller'>
-                  <span className='sm:hidden'>Seller</span>
+                  <span className='sm:hidden'>Seller Info</span>
                   <span className='hidden sm:inline'>Seller Info</span>
                 </Link>
               </Button>
