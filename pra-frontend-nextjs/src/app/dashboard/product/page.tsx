@@ -2,10 +2,9 @@
 
 import Link from 'next/link';
 import React, { useEffect, useRef, useState } from 'react';
-import { Search, SlidersHorizontal } from 'lucide-react';
+import { SlidersHorizontal } from 'lucide-react';
 import PageContainer from '@/components/layout/page-container';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { ProductCard } from '@/components/products/product-card';
 import { ProductFilters } from '@/components/products/product-filters';
 import { ProductPagination } from '@/components/products/product-pagination';
@@ -92,9 +91,9 @@ export default function ProductListingPage() {
 
   return (
     <PageContainer>
-      <div className='min-h-full w-full bg-slate-50 p-4 text-slate-900 sm:p-6 dark:bg-slate-950 dark:text-slate-100'>
+      <div className='min-h-full w-full max-w-full overflow-x-hidden bg-slate-50 p-4 text-slate-900 sm:p-6 dark:bg-slate-950 dark:text-slate-100'>
         {/* Sticky header */}
-        <div className='sticky top-0 z-30 -mx-4 mb-4 border-b border-slate-200/80 bg-slate-50/95 px-4 pt-4 pb-4 backdrop-blur sm:-mx-6 sm:px-6 dark:border-slate-800 dark:bg-slate-950/95'>
+        <div className='sticky top-0 z-30 mb-4 border-b border-slate-200/80 bg-slate-50/95 px-4 pt-4 pb-4 backdrop-blur sm:px-6 dark:border-slate-800 dark:bg-slate-950/95'>
           <div className='flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between'>
             <div className='min-w-0'>
               <h2 className='text-2xl font-semibold tracking-tight text-slate-950 sm:text-3xl dark:text-white'>
@@ -105,92 +104,81 @@ export default function ProductListingPage() {
               </p>
             </div>
 
-            <div className='flex w-full flex-col gap-3 sm:flex-row sm:items-center lg:w-auto'>
-              {/*<div className='flex w-full items-center gap-2 rounded-2xl border border-slate-200/80 bg-white px-3 py-2 shadow-[0_8px_30px_rgba(15,23,42,0.05)] sm:w-72 dark:border-slate-800 dark:bg-slate-900'>*/}
-              {/*  <Search className='h-4 w-4 shrink-0 text-slate-500 dark:text-slate-400' />*/}
-              {/*  <Input*/}
-              {/*    value={query}*/}
-              {/*    onChange={(e) => setQuery(e.target.value)}*/}
-              {/*    placeholder='Search products, categories...'*/}
-              {/*    className='h-8 border-0 bg-transparent p-0 shadow-none focus-visible:ring-0 focus-visible:ring-offset-0'*/}
-              {/*  />*/}
-              {/*</div>*/}
-
-              <div className='flex w-full gap-3 sm:w-auto'>
-                <Sheet
-                  open={mobileFiltersOpen}
-                  onOpenChange={setMobileFiltersOpen}
-                >
-                  <Button
-                    type='button'
-                    variant='outline'
-                    onClick={() => setMobileFiltersOpen(true)}
-                    className='flex-1 rounded-2xl border-slate-200 bg-white text-slate-700 shadow-sm hover:bg-slate-50 hover:text-slate-950 sm:hidden dark:border-slate-800 dark:bg-slate-900 dark:text-slate-300 dark:hover:bg-slate-800 dark:hover:text-white'
-                  >
-                    <SlidersHorizontal className='mr-2 h-4 w-4' />
-                    Filters
-                  </Button>
-
-                  <SheetContent
-                    side='right'
-                    className='w-[92vw] overflow-y-auto border-slate-200 bg-slate-50 p-0 sm:max-w-md dark:border-slate-800 dark:bg-slate-950'
-                  >
-                    <div className='p-4'>
-                      <SheetHeader className='mb-4 text-left'>
-                        <SheetTitle className='text-slate-950 dark:text-white'>
-                          Filters
-                        </SheetTitle>
-                        <SheetDescription className='text-slate-600 dark:text-slate-400'>
-                          Refine products before browsing the full list.
-                        </SheetDescription>
-                      </SheetHeader>
-
-                      <ProductFilters
-                        query={query}
-                        onQueryChange={setQuery}
-                        category={category}
-                        onCategoryChange={setCategory}
-                        categories={categories}
-                        sortBy={sortBy}
-                        onSortByChange={setSortBy}
-                        lifecycleFilters={lifecycleFilters}
-                        onToggleLifecycle={toggleLifecycle}
-                        onClearLifecycle={clearLifecycleFilters}
-                        minPrice={minPrice}
-                        maxPrice={maxPrice}
-                        onMinPriceChange={setMinPrice}
-                        onMaxPriceChange={setMaxPrice}
-                        minQuality={minQuality}
-                        onMinQualityChange={setMinQuality}
-                        minScore={minScore}
-                        onMinScoreChange={setMinScore}
-                        filteredCount={filtered.length}
-                        totalProducts={totalProducts}
-                        avgRating={avgRating}
-                        onReset={clearFilters}
-                      />
-                    </div>
-                  </SheetContent>
-                </Sheet>
-
+            <div className='grid w-full grid-cols-1 gap-3 sm:grid-cols-3 lg:w-auto'>
+              <Sheet
+                open={mobileFiltersOpen}
+                onOpenChange={setMobileFiltersOpen}
+              >
                 <Button
-                  asChild
-                  className='flex-1 rounded-2xl bg-slate-950 text-white shadow-sm hover:bg-slate-800 sm:w-auto sm:flex-none dark:bg-white dark:text-slate-950 dark:hover:bg-slate-200'
+                  type='button'
+                  variant='outline'
+                  onClick={() => setMobileFiltersOpen(true)}
+                  className='w-full min-w-0 rounded-2xl border-slate-200 bg-white text-slate-700 shadow-sm hover:bg-slate-50 hover:text-slate-950 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-300 dark:hover:bg-slate-800 dark:hover:text-white'
                 >
-                  <Link href='/dashboard/seller'>Seller Info</Link>
+                  <SlidersHorizontal className='mr-2 h-4 w-4 shrink-0' />
+                  Filters
                 </Button>
-                <Button
-                  asChild
-                  className='flex-1 rounded-2xl bg-slate-950 text-white shadow-sm hover:bg-slate-800 sm:w-auto sm:flex-none dark:bg-white dark:text-slate-950 dark:hover:bg-slate-200'
+
+                <SheetContent
+                  side='right'
+                  className='w-full max-w-[92vw] overflow-y-auto border-slate-200 bg-slate-50 p-0 dark:border-slate-800 dark:bg-slate-950'
                 >
-                  <Link href='/dashboard/filtered-product'>Smart Search</Link>
-                </Button>
-              </div>
+                  <div className='p-4'>
+                    <SheetHeader className='mb-4 text-left'>
+                      <SheetTitle className='text-slate-950 dark:text-white'>
+                        Filters
+                      </SheetTitle>
+                      <SheetDescription className='text-slate-600 dark:text-slate-400'>
+                        Refine products before browsing the full list.
+                      </SheetDescription>
+                    </SheetHeader>
+
+                    <ProductFilters
+                      query={query}
+                      onQueryChange={setQuery}
+                      category={category}
+                      onCategoryChange={setCategory}
+                      categories={categories}
+                      sortBy={sortBy}
+                      onSortByChange={setSortBy}
+                      lifecycleFilters={lifecycleFilters}
+                      onToggleLifecycle={toggleLifecycle}
+                      onClearLifecycle={clearLifecycleFilters}
+                      minPrice={minPrice}
+                      maxPrice={maxPrice}
+                      onMinPriceChange={setMinPrice}
+                      onMaxPriceChange={setMaxPrice}
+                      minQuality={minQuality}
+                      onMinQualityChange={setMinQuality}
+                      minScore={minScore}
+                      onMinScoreChange={setMinScore}
+                      filteredCount={filtered.length}
+                      totalProducts={totalProducts}
+                      avgRating={avgRating}
+                      onReset={clearFilters}
+                    />
+                  </div>
+                </SheetContent>
+              </Sheet>
+
+              <Button
+                asChild
+                className='w-full min-w-0 rounded-2xl bg-slate-950 text-white shadow-sm hover:bg-slate-800 dark:bg-white dark:text-slate-950 dark:hover:bg-slate-200'
+              >
+                <Link href='/dashboard/seller'>Seller Info</Link>
+              </Button>
+
+              <Button
+                asChild
+                className='w-full min-w-0 rounded-2xl bg-slate-950 text-white shadow-sm hover:bg-slate-800 dark:bg-white dark:text-slate-950 dark:hover:bg-slate-200'
+              >
+                <Link href='/dashboard/filtered-product'>Smart Search</Link>
+              </Button>
             </div>
           </div>
         </div>
 
-        <div className='grid grid-cols-1 gap-4 md:grid-cols-4 md:items-start'>
+        <div className='grid w-full max-w-full grid-cols-1 gap-4 md:grid-cols-4 md:items-start'>
           {/* Sticky filters on desktop, hidden on mobile */}
           <aside className='hidden md:sticky md:top-28 md:col-span-1 md:block md:self-start'>
             <ProductFilters
