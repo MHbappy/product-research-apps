@@ -14,7 +14,7 @@ function ProductCardSkeleton() {
       <Card className='group relative h-full overflow-hidden rounded-[28px] border border-slate-200/80 bg-white shadow-[0_8px_30px_rgba(15,23,42,0.05)] dark:border-slate-800 dark:bg-slate-900'>
         <div className='pointer-events-none absolute top-0 right-0 h-24 w-24 translate-x-8 -translate-y-8 rounded-full bg-slate-200/30 blur-3xl dark:bg-slate-500/10' />
 
-        <CardContent className='relative flex h-full flex-col p-4'>
+        <CardContent className='relative flex h-full flex-col'>
           <div className='flex gap-3'>
             {/* product visual */}
             <div className='relative h-24 w-24 shrink-0 overflow-hidden rounded-[24px] border border-slate-200 bg-white shadow-sm ring-1 ring-black/5 dark:border-slate-800 dark:bg-slate-950 dark:ring-white/10'>

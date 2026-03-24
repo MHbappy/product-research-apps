@@ -26,7 +26,7 @@ export function ProductCard({ product }: Props) {
           aria-hidden
         />
 
-        <CardContent className='relative flex h-full flex-col p-4'>
+        <CardContent className='relative flex h-full flex-col'>
           <div className='flex gap-3'>
             {/* product visual */}
             <div className='relative h-24 w-24 shrink-0 overflow-hidden rounded-[24px] border border-slate-200 bg-white shadow-sm ring-1 ring-black/5 dark:border-slate-800 dark:bg-slate-950 dark:ring-white/10'>
