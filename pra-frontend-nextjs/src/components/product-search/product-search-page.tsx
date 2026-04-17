@@ -18,6 +18,7 @@ import { LoadingPanel } from '@/components/product-search/loading-panel';
 import { ImageSearchPanel } from '@/components/product-search/image-search-panel';
 import { ResultsPanel } from '@/components/product-search/results-panel';
 import { SearchFiltersPanel } from '@/components/product-search/search-filters-panel';
+import { ResultsSkeletonGrid } from '@/components/product-search/skeletons';
 
 type ViewMode = 'search' | 'loading' | 'results';
 
@@ -299,7 +300,7 @@ export default function ProductSearchPage() {
               />
             </form>
           ) : viewMode === 'loading' ? (
-            <LoadingPanel />
+            <ResultsSkeletonGrid />
           ) : (
             <ResultsPanel
               results={results}

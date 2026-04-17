@@ -38,7 +38,7 @@ export default function PageContainer({
 }) {
   if (!access) {
     return (
-      <div className='flex flex-1 items-center justify-center p-4 md:px-6'>
+      <div className='flex h-[calc(100dvh-52px)] flex-1 items-center justify-center overflow-hidden p-4 md:px-6'>
         {accessFallback ?? (
           <div className='text-muted-foreground text-center text-lg'>
             You do not have access to this page.
@@ -50,14 +50,27 @@ export default function PageContainer({
 
   const content = isloading ? <PageSkeleton /> : children;
 
-  return scrollable ? (
+  if (!scrollable) {
+    return (
+      <div className='flex h-[calc(100dvh-52px)] w-full flex-col overflow-hidden py-4'>
+        <div className='mb-4 flex items-start justify-between px-0'>
+          <div>
+            <Heading
+              title={pageTitle ?? ''}
+              description={pageDescription ?? ''}
+            />
+          </div>
+          {pageHeaderAction ? <div>{pageHeaderAction}</div> : null}
+        </div>
+        <div className='min-h-0 flex-1 overflow-hidden'>{content}</div>
+      </div>
+    );
+  }
+
+  return (
     <ScrollArea className='h-[calc(100dvh-52px)] w-full'>
       <div className='flex min-h-full w-full flex-col py-4'>
-        {' '}
-        {/* ❌ removed px */}
         <div className='mb-4 flex items-start justify-between px-0'>
-          {' '}
-          {/* ensure no padding */}
           <div>
             <Heading
               title={pageTitle ?? ''}
@@ -69,20 +82,5 @@ export default function PageContainer({
         {content}
       </div>
     </ScrollArea>
-  ) : (
-    <div className='flex min-h-full w-full flex-col py-4'>
-      {' '}
-      {/* ❌ removed px */}
-      <div className='mb-4 flex items-start justify-between'>
-        <div>
-          <Heading
-            title={pageTitle ?? ''}
-            description={pageDescription ?? ''}
-          />
-        </div>
-        {pageHeaderAction ? <div>{pageHeaderAction}</div> : null}
-      </div>
-      {content}
-    </div>
   );
 }
