@@ -1,15 +1,7 @@
 'use client';
 
 import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
-import {
-  ArrowRight,
-  Boxes,
-  Search,
-  Sparkles,
-  Upload,
-  X,
-  Zap
-} from 'lucide-react';
+import { Boxes, Search, Upload, X, Zap } from 'lucide-react';
 
 import PageContainer from '@/components/layout/page-container';
 import { Badge } from '@/components/ui/badge';
@@ -17,8 +9,6 @@ import { Button } from '@/components/ui/button';
 import { ProductCard } from '@/components/products/product-card';
 import { Skeleton } from '@/components/ui/skeleton';
 import type { Product } from '@/types/product';
-
-type SearchState = 'idle' | 'loading' | 'done';
 
 const DUMMY_PRODUCTS: Product[] = [
   {
@@ -323,6 +313,9 @@ const DUMMY_PRODUCTS: Product[] = [
   }
 ];
 
+const TEXTAREA_MIN_HEIGHT = 104;
+const TEXTAREA_MAX_HEIGHT = 260;
+
 function SearchSkeleton() {
   return (
     <div className='overflow-hidden rounded-[28px] border border-slate-200/80 bg-white shadow-[0_10px_30px_rgba(15,23,42,0.05)] dark:border-slate-800 dark:bg-slate-900'>
@@ -396,21 +389,30 @@ function Composer({
   onRunSearch,
   compact = false
 }: ComposerProps) {
-  const resizeTextarea = () => {
+  const resizeTextarea = React.useCallback(() => {
     const el = textareaRef.current;
     if (!el) return;
+
     el.style.height = '0px';
-    const nextHeight = Math.min(Math.max(el.scrollHeight, 104), 260);
+    const nextHeight = Math.min(
+      Math.max(el.scrollHeight, TEXTAREA_MIN_HEIGHT),
+      TEXTAREA_MAX_HEIGHT
+    );
     el.style.height = `${nextHeight}px`;
-  };
+  }, [textareaRef]);
 
   useLayoutEffect(() => {
     resizeTextarea();
-  }, [query]);
+  }, [query, resizeTextarea]);
 
   return (
-    <div className={compact ? 'w-full max-w-3xl' : 'w-full max-w-4xl'}>
-      <div className='mb-5 text-center'>
+    <div
+      className={[
+        'mx-auto w-full max-w-4xl',
+        compact ? 'pt-2 sm:pt-4' : ''
+      ].join(' ')}
+    >
+      <div className='mb-4 text-center sm:mb-5'>
         <p className='text-xs font-medium tracking-[0.22em] text-slate-500 uppercase dark:text-slate-400'>
           Search with text or image
         </p>
@@ -419,19 +421,16 @@ function Composer({
       <div className='rounded-[34px] border border-slate-200 bg-white px-4 py-4 shadow-[0_20px_60px_rgba(15,23,42,0.08)] sm:px-5 sm:py-5 dark:border-slate-800 dark:bg-slate-900'>
         <div className='relative'>
           <Search className='pointer-events-none absolute top-4 left-4 h-5 w-5 text-slate-400' />
+
           <textarea
             ref={textareaRef}
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder='Describe the product you want to find...'
-            rows={4}
-            className='min-h-[104px] w-full resize-none rounded-[28px] border border-slate-200 bg-slate-50 px-12 py-4 pr-[170px] text-[15px] leading-7 text-slate-950 transition outline-none placeholder:text-slate-400 focus:border-slate-300 focus:bg-white dark:border-slate-700 dark:bg-slate-950 dark:text-white dark:placeholder:text-slate-500 dark:focus:border-slate-600 dark:focus:bg-slate-950'
-            onInput={() => {
-              const el = textareaRef.current;
-              if (!el) return;
-              el.style.height = '0px';
-              el.style.height = `${Math.min(Math.max(el.scrollHeight, 104), 260)}px`;
-            }}
+            rows={1}
+            style={{ height: `${TEXTAREA_MIN_HEIGHT}px` }}
+            className='min-h-[104px] w-full resize-none overflow-hidden rounded-[28px] border border-slate-200 bg-slate-50 px-12 py-4 pr-4 text-[15px] leading-7 text-slate-950 transition-[border-color,background-color,box-shadow] duration-200 outline-none placeholder:text-slate-400 focus:border-slate-300 focus:bg-white focus:shadow-[0_0_0_4px_rgba(148,163,184,0.12)] sm:pr-[192px] dark:border-slate-700 dark:bg-slate-950 dark:text-white dark:placeholder:text-slate-500 dark:focus:border-slate-600 dark:focus:bg-slate-950'
+            onInput={resizeTextarea}
             onKeyDown={(e) => {
               if (e.key === 'Enter' && e.ctrlKey) {
                 e.preventDefault();
@@ -535,6 +534,7 @@ export default function ProductSearchPage() {
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const previewUrlRef = useRef<string | null>(null);
   const topRef = useRef<HTMLDivElement | null>(null);
+  const searchTimeoutRef = useRef<number | null>(null);
 
   const isInitial = !hasSearched && !isLoading;
   const hasInput = Boolean(query.trim() || imageFile);
@@ -542,6 +542,9 @@ export default function ProductSearchPage() {
   useEffect(() => {
     return () => {
       if (previewUrlRef.current) URL.revokeObjectURL(previewUrlRef.current);
+      if (searchTimeoutRef.current !== null) {
+        window.clearTimeout(searchTimeoutRef.current);
+      }
     };
   }, []);
 
@@ -567,10 +570,14 @@ export default function ProductSearchPage() {
   const runSearch = () => {
     if (!hasInput) return;
 
+    if (searchTimeoutRef.current !== null) {
+      window.clearTimeout(searchTimeoutRef.current);
+    }
+
     setIsLoading(true);
     setHasSearched(true);
 
-    window.setTimeout(() => {
+    searchTimeoutRef.current = window.setTimeout(() => {
       const q = query.trim().toLowerCase();
       const seed = (imageFile?.name ?? '').toLowerCase();
       let next = [...DUMMY_PRODUCTS];
@@ -590,6 +597,7 @@ export default function ProductSearchPage() {
               .filter(Boolean)
               .join(' ')
               .toLowerCase();
+
             return (
               haystack.includes(q) ||
               parts.some((word) => haystack.includes(word))
@@ -622,6 +630,7 @@ export default function ProductSearchPage() {
 
       setResults(next.slice(0, 20));
       setIsLoading(false);
+
       requestAnimationFrame(() => {
         topRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
       });
@@ -629,9 +638,9 @@ export default function ProductSearchPage() {
   };
 
   return (
-    <PageContainer scrollable={false}>
-      <div className='h-screen overflow-hidden bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100'>
-        <div className='flex h-full min-h-0 flex-col p-3 sm:p-4 lg:p-5'>
+    <PageContainer scrollable={true}>
+      <div className='min-h-screen overflow-x-hidden bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100'>
+        <div className='flex min-h-screen flex-col p-3 sm:p-4 lg:p-5'>
           {isInitial ? (
             <div className='flex flex-1 items-center justify-center'>
               <Composer
@@ -650,7 +659,10 @@ export default function ProductSearchPage() {
             </div>
           ) : (
             <>
-              <div ref={topRef} className='flex shrink-0 justify-center'>
+              <div
+                ref={topRef}
+                className='flex shrink-0 justify-center px-0 pt-2 sm:pt-3 lg:pt-4'
+              >
                 <Composer
                   query={query}
                   setQuery={setQuery}
@@ -667,7 +679,7 @@ export default function ProductSearchPage() {
                 />
               </div>
 
-              <div className='mt-4 min-h-0 flex-1 overflow-y-auto px-0 sm:px-1'>
+              <div className='mt-4 pb-8'>
                 {isLoading ? (
                   <div>
                     <SearchResultsHeader count={20} />
