@@ -1,10 +1,11 @@
+import React from 'react';
+import type { Metadata } from 'next';
+import { cookies } from 'next/headers';
+
 import KBar from '@/components/kbar';
 import AppSidebar from '@/components/layout/app-sidebar';
 import Header from '@/components/layout/header';
 import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar';
-import type { Metadata } from 'next';
-import { cookies } from 'next/headers';
-import React from "react";
 
 export const metadata: Metadata = {
   title: 'Next Shadcn Dashboard Starter',
@@ -24,11 +25,8 @@ export default async function DashboardLayout({
       <SidebarProvider defaultOpen={defaultOpen}>
         <div className='flex h-dvh w-full overflow-hidden'>
           <AppSidebar />
-
           <SidebarInset className='flex min-w-0 flex-1 flex-col overflow-hidden'>
             <Header />
-
-            {/* 🔥 CRITICAL FIX */}
             <main className='min-w-0 flex-1 overflow-x-hidden overflow-y-auto'>
               {children}
             </main>
