@@ -413,20 +413,20 @@ function Composer({
       ].join(' ')}
     >
       <div className='mb-4 text-center sm:mb-5'>
-        <p className='text-xs font-medium tracking-[0.22em] text-slate-500 uppercase dark:text-slate-400'>
-          Search with text or image
+        <p className='text-xs font-medium tracking-[0.22em] text-slate-900 uppercase dark:text-slate-400'>
+          Just describe it or upload a photo — we’ll find the best match.
         </p>
       </div>
 
       <div className='rounded-[34px] border border-slate-200 bg-white px-4 py-4 shadow-[0_20px_60px_rgba(15,23,42,0.08)] sm:px-5 sm:py-5 dark:border-slate-800 dark:bg-slate-900'>
         <div className='relative'>
-          <Search className='pointer-events-none absolute top-4 left-4 h-5 w-5 text-slate-400' />
+          <Search className='pointer-events-none absolute top-5 left-4 h-5 w-5 text-slate-400' />
 
           <textarea
             ref={textareaRef}
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder='Describe the product you want to find...'
+            placeholder='Describe the product you want to find or Search by Image...'
             rows={1}
             style={{ height: `${TEXTAREA_MIN_HEIGHT}px` }}
             className='min-h-[104px] w-full resize-none overflow-hidden rounded-[28px] border border-slate-200 bg-slate-50 px-12 py-4 pr-4 text-[15px] leading-7 text-slate-950 transition-[border-color,background-color,box-shadow] duration-200 outline-none placeholder:text-slate-400 focus:border-slate-300 focus:bg-white focus:shadow-[0_0_0_4px_rgba(148,163,184,0.12)] sm:pr-[192px] dark:border-slate-700 dark:bg-slate-950 dark:text-white dark:placeholder:text-slate-500 dark:focus:border-slate-600 dark:focus:bg-slate-950'

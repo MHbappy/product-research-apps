@@ -3,7 +3,6 @@
 import * as React from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-
 import {
   Collapsible,
   CollapsibleContent,
@@ -34,6 +33,7 @@ import {
   SidebarRail,
   useSidebar
 } from '@/components/ui/sidebar';
+import { cn } from '@/lib/utils';
 
 import { UserAvatarProfile } from '@/components/user-avatar-profile';
 import { navItems } from '@/config/nav-config';
@@ -87,6 +87,18 @@ export default function AppSidebar() {
     await logout();
   }, [closeMobileSidebar, logout]);
 
+  const navButtonClass = (active: boolean) =>
+    cn(
+      'font-medium text-sm leading-none tracking-tight transition-colors',
+      active && 'font-semibold'
+    );
+
+  const subNavButtonClass = (active: boolean) =>
+    cn(
+      'font-medium text-sm leading-none tracking-tight transition-colors',
+      active && 'font-semibold'
+    );
+
   return (
     <Sidebar
       collapsible='icon'
@@ -118,6 +130,7 @@ export default function AppSidebar() {
                         <SidebarMenuButton
                           tooltip={item.title}
                           isActive={active}
+                          className={navButtonClass(active)}
                         >
                           {item.icon && <Icon />}
                           <span>{item.title}</span>
@@ -138,11 +151,12 @@ export default function AppSidebar() {
                                 <SidebarMenuSubButton
                                   asChild
                                   isActive={subActive}
+                                  className={subNavButtonClass(subActive)}
                                 >
                                   <Link
                                     href={subItem.url}
                                     onClick={closeMobileSidebar}
-                                    className='transition-colors'
+                                    className='text-sm leading-none font-medium tracking-tight transition-colors'
                                   >
                                     <span>{subItem.title}</span>
                                   </Link>
@@ -163,11 +177,12 @@ export default function AppSidebar() {
                     asChild
                     tooltip={item.title}
                     isActive={active}
+                    className={navButtonClass(active)}
                   >
                     <Link
                       href={item.url}
                       onClick={closeMobileSidebar}
-                      className='transition-colors'
+                      className='flex w-full items-center gap-2 text-sm leading-none font-medium tracking-tight transition-colors'
                     >
                       <Icon />
                       <span>{item.title}</span>
@@ -217,6 +232,7 @@ export default function AppSidebar() {
                     )}
                   </div>
                 </DropdownMenuLabel>
+
                 <DropdownMenuSeparator />
 
                 <DropdownMenuGroup>

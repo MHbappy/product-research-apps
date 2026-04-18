@@ -9,12 +9,12 @@ import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar';
 
 export const metadata: Metadata = {
   title: 'Next Shadcn Dashboard Starter',
-  description: 'Basic dashboard with Next.js and Shadcn'
+  description: 'Basic dashboard with Next.js and Shadcn',
 };
 
 export default async function DashboardLayout({
-  children
-}: {
+                                                children,
+                                              }: {
   children: React.ReactNode;
 }) {
   const cookieStore = await cookies();
@@ -23,11 +23,11 @@ export default async function DashboardLayout({
   return (
     <KBar>
       <SidebarProvider defaultOpen={defaultOpen}>
-        <div className='flex h-dvh w-full overflow-hidden'>
+        <div className="flex h-dvh w-full overflow-hidden">
           <AppSidebar />
-          <SidebarInset className='flex min-w-0 flex-1 flex-col overflow-hidden'>
+          <SidebarInset className="flex min-w-0 flex-1 flex-col overflow-hidden">
             <Header />
-            <main className='min-w-0 flex-1 overflow-x-hidden overflow-y-auto'>
+            <main className="min-w-0 flex-1 overflow-x-hidden overflow-y-auto">
               {children}
             </main>
           </SidebarInset>
