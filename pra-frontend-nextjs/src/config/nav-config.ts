@@ -48,9 +48,45 @@ export const navItems: NavItem[] = [
     // No access restriction - all authenticated users can see
   },
   {
+    title: 'Category',
+    url: '/dashboard/category',
+    icon: 'category',
+    shortcut: ['p', 'p'],
+    isActive: false,
+    items: [],
+    access: { role: 'ROLE_USER' } // Requires ROLE_USER or higher
+  },
+  {
     title: 'Product',
     url: '/dashboard/product',
     icon: 'product',
+    shortcut: ['p', 'p'],
+    isActive: false,
+    items: [],
+    access: { role: 'ROLE_USER' } // Requires ROLE_USER or higher
+  },
+  {
+    title: 'Search',
+    url: 'search-products',
+    icon: 'search',
+    shortcut: ['p', 'p'],
+    isActive: false,
+    items: [],
+    access: { role: 'ROLE_USER' } // Requires ROLE_USER or higher
+  },
+  {
+    title: 'Research Lab',
+    url: '/dashboard/product-research-lab',
+    icon: 'research',
+    shortcut: ['p', 'p'],
+    isActive: false,
+    items: [],
+    access: { role: 'ROLE_USER' } // Requires ROLE_USER or higher
+  },
+  {
+    title: 'Seller Info',
+    url: '/dashboard/seller',
+    icon: 'seller',
     shortcut: ['p', 'p'],
     isActive: false,
     items: [],

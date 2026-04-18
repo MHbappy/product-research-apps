@@ -68,19 +68,19 @@ export default function PageContainer({
   }
 
   return (
-    <ScrollArea className='h-[calc(100dvh-52px)] w-full'>
-      <div className='flex min-h-full w-full flex-col py-4'>
-        <div className='mb-4 flex items-start justify-between px-0'>
-          <div>
-            <Heading
-              title={pageTitle ?? ''}
-              description={pageDescription ?? ''}
-            />
-          </div>
-          {pageHeaderAction ? <div>{pageHeaderAction}</div> : null}
+    <div className='flex min-h-full w-full flex-col overflow-x-hidden'>
+      <div className='mb-4 flex flex-wrap items-start justify-between gap-3'>
+        <div className='min-w-0 flex-1'>
+          <Heading
+            title={pageTitle ?? ''}
+            description={pageDescription ?? ''}
+          />
         </div>
-        {content}
+
+        {pageHeaderAction && <div className='shrink-0'>{pageHeaderAction}</div>}
       </div>
-    </ScrollArea>
+
+      <div className='min-w-0 flex-1 overflow-x-hidden'>{content}</div>
+    </div>
   );
 }

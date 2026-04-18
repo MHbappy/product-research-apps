@@ -457,7 +457,7 @@ export default function SmartProductAssistantPage() {
 
       setInput('');
       setIsThinking(false);
-    }, 30000);
+    }, 3000);
   };
 
   const runPrompt = (prompt: string, mode: Intent = 'chat') => {
