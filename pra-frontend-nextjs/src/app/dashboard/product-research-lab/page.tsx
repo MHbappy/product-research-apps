@@ -2,6 +2,7 @@
 
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import {
+  ArrowLeftRight,
   ArrowRight,
   BarChart3,
   BadgePercent,
@@ -67,6 +68,16 @@ const formatPrice = (value: number) =>
     maximumFractionDigits: 0
   }).format(value);
 
+const MODE_LABELS: Record<Intent, string> = {
+  chat: 'Chat',
+  winning: 'Winning',
+  trendy: 'Trendy',
+  seasonal: 'Seasonal',
+  dying: 'Dying',
+  compare: 'Compare',
+  product: 'Search'
+};
+
 const INTENTS: Array<{
   id: Intent;
   label: string;
@@ -92,6 +103,12 @@ const INTENTS: Array<{
     hint: 'Right now'
   },
   {
+    id: 'compare',
+    label: 'Compare',
+    icon: <ArrowLeftRight className='h-4 w-4' />,
+    hint: 'Side by side'
+  },
+  {
     id: 'dying',
     label: 'Dying',
     icon: <Flame className='h-4 w-4' />,
@@ -112,6 +129,43 @@ const SUGGESTED_PROMPTS = [
   'Which products are dying and should be avoided?',
   'I need a good product for gifting',
   'Compare product A and B'
+];
+
+const MOBILE_QUICK_PROMPTS: Array<{
+  label: string;
+  prompt: string;
+  mode: Intent;
+  hint: string;
+  icon: React.ReactNode;
+}> = [
+  {
+    label: 'Winning',
+    prompt: 'Show winning products under $50',
+    mode: 'winning',
+    hint: 'High conversion',
+    icon: <Zap className='h-4 w-4' />
+  },
+  {
+    label: 'Trendy',
+    prompt: 'What trendy products are growing?',
+    mode: 'trendy',
+    hint: 'Fast rising',
+    icon: <TrendingUp className='h-4 w-4' />
+  },
+  {
+    label: 'Compare',
+    prompt: 'Compare product A and B',
+    mode: 'compare',
+    hint: 'Decision mode',
+    icon: <ArrowLeftRight className='h-4 w-4' />
+  },
+  {
+    label: 'Chat',
+    prompt: 'Recommend a product for me',
+    mode: 'chat',
+    hint: 'Ask naturally',
+    icon: <MessageCircle className='h-4 w-4' />
+  }
 ];
 
 const CATALOG: Product[] = [
@@ -238,7 +292,9 @@ const CATALOG: Product[] = [
 
 function detectIntent(query: string, selectedMode: Intent): Intent {
   const q = query.toLowerCase();
+
   if (selectedMode !== 'chat') return selectedMode;
+
   if (q.includes('winning')) return 'winning';
   if (q.includes('trendy') || q.includes('trend')) return 'trendy';
   if (q.includes('seasonal') || q.includes('summer') || q.includes('winter'))
@@ -250,9 +306,11 @@ function detectIntent(query: string, selectedMode: Intent): Intent {
     q.includes('product') ||
     q.includes('find') ||
     q.includes('show me') ||
-    q.includes('need')
+    q.includes('need') ||
+    q.includes('recommend')
   )
     return 'product';
+
   return 'chat';
 }
 
@@ -386,6 +444,36 @@ function MetricCard({
   );
 }
 
+function ConsoleIntentButton({
+  item,
+  selected,
+  onClick
+}: {
+  item: {
+    id: Intent;
+    label: string;
+    icon: React.ReactNode;
+    hint: string;
+  };
+  selected: boolean;
+  onClick: () => void;
+}) {
+  return (
+    <Button
+      type='button'
+      variant={selected ? 'default' : 'outline'}
+      onClick={onClick}
+      className='rounded-full px-4'
+    >
+      {item.icon}
+      <span className='ml-2'>{item.label}</span>
+      <span className='ml-2 hidden text-xs opacity-70 sm:inline'>
+        {item.hint}
+      </span>
+    </Button>
+  );
+}
+
 export default function SmartProductAssistantPage() {
   const [selectedMode, setSelectedMode] = useState<Intent>('chat');
   const [input, setInput] = useState('');
@@ -415,8 +503,7 @@ export default function SmartProductAssistantPage() {
     [activeProducts, selectedProductId]
   );
 
-  const currentIntentLabel =
-    INTENTS.find((item) => item.id === selectedMode)?.label ?? 'Chat';
+  const currentIntentLabel = MODE_LABELS[selectedMode] ?? 'Chat';
 
   const scrollToBottom = (behavior: ScrollBehavior = 'smooth') => {
     endRef.current?.scrollIntoView({ behavior, block: 'end' });
@@ -426,14 +513,15 @@ export default function SmartProductAssistantPage() {
     scrollToBottom('smooth');
   }, [messages.length, isThinking, activeProducts.length]);
 
-  const sendMessage = () => {
-    const trimmed = input.trim();
+  const submitQuery = (query: string, mode: Intent) => {
+    const trimmed = query.trim();
     if (!trimmed || isThinking) return;
 
-    const intent = detectIntent(trimmed, selectedMode);
+    const intent = detectIntent(trimmed, mode);
     const reply = buildReply(trimmed, intent);
     const stamp = Date.now();
 
+    setSelectedMode(mode);
     setIsThinking(true);
 
     window.setTimeout(() => {
@@ -460,16 +548,19 @@ export default function SmartProductAssistantPage() {
     }, 3000);
   };
 
+  const sendMessage = () => {
+    submitQuery(input, selectedMode);
+  };
+
   const runPrompt = (prompt: string, mode: Intent = 'chat') => {
-    setSelectedMode(mode);
-    setInput(prompt);
+    submitQuery(prompt, mode);
   };
 
   return (
     <PageContainer scrollable={false}>
       <div className='flex h-full min-h-0 flex-col overflow-hidden bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100'>
         <div className='mx-auto flex h-full min-h-0 w-full max-w-none flex-col gap-3 px-3 py-3 sm:px-4 sm:py-4 lg:px-5'>
-          <header className='shrink-0 rounded-[28px] border border-slate-200/80 bg-gradient-to-br from-white via-white to-slate-50 px-4 py-3 shadow-[0_12px_40px_rgba(15,23,42,0.06)] backdrop-blur sm:px-5 sm:py-4 dark:border-slate-800 dark:from-slate-900 dark:via-slate-900 dark:to-slate-950'>
+          <header className='hidden shrink-0 rounded-[28px] border border-slate-200/80 bg-gradient-to-br from-white via-white to-slate-50 px-4 py-3 shadow-[0_12px_40px_rgba(15,23,42,0.06)] backdrop-blur sm:px-5 sm:py-4 md:block dark:border-slate-800 dark:from-slate-900 dark:via-slate-900 dark:to-slate-950'>
             <div className='flex flex-col gap-3 xl:flex-row xl:items-center xl:justify-between'>
               <div className='min-w-0'>
                 <h1 className='text-xl font-semibold tracking-tight text-slate-950 sm:text-4xl dark:text-white'>
@@ -507,19 +598,12 @@ export default function SmartProductAssistantPage() {
 
             <div className='mt-4 flex flex-wrap gap-2'>
               {INTENTS.map((item) => (
-                <Button
+                <ConsoleIntentButton
                   key={item.id}
-                  type='button'
-                  variant={selectedMode === item.id ? 'default' : 'outline'}
+                  item={item}
+                  selected={selectedMode === item.id}
                   onClick={() => setSelectedMode(item.id)}
-                  className='rounded-full px-4'
-                >
-                  {item.icon}
-                  <span className='ml-2'>{item.label}</span>
-                  <span className='ml-2 hidden text-xs opacity-70 sm:inline'>
-                    {item.hint}
-                  </span>
-                </Button>
+                />
               ))}
             </div>
           </header>
@@ -554,17 +638,87 @@ export default function SmartProductAssistantPage() {
 
             <main className='min-h-0 overflow-hidden rounded-[28px] border border-slate-200 bg-white shadow-[0_10px_30px_rgba(15,23,42,0.05)] dark:border-slate-800 dark:bg-slate-900'>
               <div className='flex h-full min-h-0 flex-col overflow-hidden'>
-                <div className='flex min-h-0 flex-1 flex-col overflow-y-auto px-4 py-4 sm:px-6'>
+                <div className='flex min-h-0 flex-1 flex-col overflow-x-hidden overflow-y-auto px-4 py-4 sm:px-6'>
                   <div className='space-y-4'>
+                    <div className='px-1 pt-1 md:hidden'>
+                      <div className='flex items-start justify-between gap-3'>
+                        <div className='min-w-0'>
+                          <p className='text-[10px] font-semibold tracking-[0.22em] text-slate-500 uppercase dark:text-slate-400'>
+                            Product console
+                          </p>
+                          <h2 className='mt-1 text-lg font-semibold tracking-tight text-slate-950 dark:text-white'>
+                            Smart Product Assistant
+                          </h2>
+                          <p className='mt-1 text-sm leading-6 text-slate-600 dark:text-slate-400'>
+                            Tap a mode or launch a quick prompt.
+                          </p>
+                        </div>
+
+                        <Badge className='rounded-full px-3 py-1 capitalize'>
+                          {currentIntentLabel}
+                        </Badge>
+                      </div>
+
+                      <div className='mt-4 flex gap-2 overflow-x-auto pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden'>
+                        {INTENTS.map((item) => (
+                          <button
+                            key={item.id}
+                            type='button'
+                            onClick={() => setSelectedMode(item.id)}
+                            className={`inline-flex shrink-0 items-center gap-2 rounded-full border px-4 py-2 text-sm font-medium transition ${
+                              selectedMode === item.id
+                                ? 'border-slate-950 bg-slate-950 text-white dark:border-white dark:bg-white dark:text-slate-950'
+                                : 'border-slate-200 bg-white text-slate-700 shadow-sm hover:border-slate-300 hover:bg-slate-50 dark:border-slate-800 dark:bg-slate-950 dark:text-slate-300 dark:hover:bg-slate-900'
+                            }`}
+                          >
+                            {item.icon}
+                            <span>{item.label}</span>
+                          </button>
+                        ))}
+                      </div>
+
+                      <div className='mt-4 grid grid-cols-2 gap-2'>
+                        {MOBILE_QUICK_PROMPTS.map((item) => (
+                          <button
+                            key={item.label}
+                            type='button'
+                            onClick={() => runPrompt(item.prompt, item.mode)}
+                            className='group min-w-0 rounded-2xl border border-slate-200 bg-slate-50 p-3 text-left transition hover:-translate-y-0.5 hover:bg-white hover:shadow-sm dark:border-slate-800 dark:bg-slate-950 dark:hover:bg-slate-900'
+                          >
+                            <div className='flex items-start justify-between gap-3'>
+                              <div className='min-w-0 flex-1'>
+                                <div className='flex items-center gap-2'>
+                                  <div className='rounded-xl bg-white p-2 text-slate-600 shadow-sm dark:bg-slate-900 dark:text-slate-300'>
+                                    {item.icon}
+                                  </div>
+                                  <p className='min-w-0 text-sm font-semibold text-slate-950 dark:text-white'>
+                                    {item.label}
+                                  </p>
+                                </div>
+                                <p className='mt-2 text-xs leading-5 text-slate-500 dark:text-slate-400'>
+                                  {item.hint}
+                                </p>
+                              </div>
+                              <ChevronRight className='mt-1 h-4 w-4 shrink-0 text-slate-400 transition group-hover:translate-x-0.5' />
+                            </div>
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+
                     {messages.map((message) => (
                       <div
                         key={message.id}
-                        className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
+                        className={`flex min-w-0 ${
+                          message.role === 'user'
+                            ? 'justify-end'
+                            : 'justify-start'
+                        }`}
                       >
                         <div
-                          className={`max-w-[92%] rounded-[28px] px-4 py-4 text-sm leading-6 shadow-sm sm:max-w-[82%] ${
+                          className={`max-w-[94%] min-w-0 rounded-[24px] px-4 py-4 text-sm leading-6 shadow-sm sm:max-w-[82%] md:max-w-[82%] ${
                             message.role === 'user'
-                              ? 'bg-slate-950 text-white dark:bg-white dark:text-slate-950'
+                              ? 'border border-slate-950 bg-slate-950 text-white dark:border-white dark:bg-white dark:text-slate-950'
                               : 'border border-slate-200 bg-slate-50 text-slate-800 dark:border-slate-800 dark:bg-slate-950 dark:text-slate-200'
                           }`}
                         >
@@ -582,7 +736,7 @@ export default function SmartProductAssistantPage() {
                             ) : null}
                           </div>
 
-                          <p className='mt-2'>{message.content}</p>
+                          <p className='mt-2 break-words'>{message.content}</p>
 
                           {message.followUps?.length ? (
                             <div className='mt-3 flex flex-wrap gap-2'>
@@ -602,7 +756,7 @@ export default function SmartProductAssistantPage() {
                           ) : null}
 
                           {message.products?.length ? (
-                            <div className='mt-4 grid gap-3 sm:grid-cols-2'>
+                            <div className='mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2'>
                               {message.products.map((product) => (
                                 <button
                                   key={product.id}
@@ -612,22 +766,24 @@ export default function SmartProductAssistantPage() {
                                     setSelectedProductId(product.id);
                                     scrollToBottom('smooth');
                                   }}
-                                  className='group rounded-2xl border border-slate-200 bg-white p-3 text-left transition hover:-translate-y-0.5 hover:shadow-lg dark:border-slate-800 dark:bg-slate-900'
+                                  className='group min-w-0 overflow-hidden rounded-2xl border border-slate-200 bg-white p-3 text-left transition hover:-translate-y-0.5 hover:shadow-lg dark:border-slate-800 dark:bg-slate-900'
                                 >
                                   <div className='flex items-start gap-3'>
                                     <div className='flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-slate-100 to-slate-200 text-xs font-semibold text-slate-700 dark:from-slate-800 dark:to-slate-700 dark:text-slate-200'>
                                       {product.imageLabel}
                                     </div>
+
                                     <div className='min-w-0 flex-1'>
                                       <div className='flex items-start justify-between gap-3'>
-                                        <div className='min-w-0'>
+                                        <div className='min-w-0 flex-1'>
                                           <p className='truncate text-sm font-semibold text-slate-950 dark:text-white'>
                                             {product.title}
                                           </p>
-                                          <p className='text-xs text-slate-500 dark:text-slate-400'>
+                                          <p className='mt-0.5 text-xs leading-5 break-words text-slate-500 dark:text-slate-400'>
                                             {product.summary}
                                           </p>
                                         </div>
+
                                         <ChevronRight className='mt-0.5 h-4 w-4 shrink-0 text-slate-400 transition group-hover:translate-x-0.5' />
                                       </div>
 
@@ -660,14 +816,11 @@ export default function SmartProductAssistantPage() {
                       <div className='flex justify-start'>
                         <div className='flex items-center gap-3 rounded-[28px] border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-500 dark:border-slate-800 dark:bg-slate-950 dark:text-slate-400'>
                           <span className='leading-none'>Analyzing</span>
-                          {/* Animated dots */}
                           <div className='flex items-center gap-1'>
                             <span className='h-1.5 w-1.5 animate-[pulse_1.2s_ease-in-out_infinite] rounded-full bg-slate-400' />
                             <span className='h-1.5 w-1.5 animate-[pulse_1.2s_ease-in-out_infinite] rounded-full bg-slate-400 [animation-delay:0.2s]' />
                             <span className='h-1.5 w-1.5 animate-[pulse_1.2s_ease-in-out_infinite] rounded-full bg-slate-400 [animation-delay:0.4s]' />
                           </div>
-
-                          {/* Text */}
                         </div>
                       </div>
                     ) : null}
@@ -678,12 +831,13 @@ export default function SmartProductAssistantPage() {
 
                 <div className='shrink-0 border-t border-slate-200/80 bg-white p-4 sm:p-6 dark:border-slate-800 dark:bg-slate-900'>
                   <div className='flex flex-col gap-3 lg:flex-row lg:items-end'>
-                    <div className='min-w-0 flex-1'>
+                    <div className='relative min-w-0 flex-1'>
                       <Textarea
                         value={input}
                         onChange={(e) => setInput(e.target.value)}
                         placeholder='Example: show me winning products under $50'
-                        className='min-h-[96px] resize-none rounded-3xl border-slate-200 bg-white text-slate-950 placeholder:text-slate-400 focus-visible:ring-slate-400 dark:border-slate-800 dark:bg-slate-950 dark:text-white'
+                        rows={1}
+                        className='max-h-[120px] min-h-[48px] resize-none rounded-3xl border-slate-200 bg-white px-3 py-2 pr-12 text-sm leading-5 text-slate-950 placeholder:text-slate-400 focus-visible:ring-slate-400 sm:min-h-[96px] sm:px-4 sm:py-3 sm:pr-4 dark:border-slate-800 dark:bg-slate-950 dark:text-white'
                         onKeyDown={(e) => {
                           if (e.key === 'Enter' && !e.shiftKey) {
                             e.preventDefault();
@@ -691,9 +845,18 @@ export default function SmartProductAssistantPage() {
                           }
                         }}
                       />
+
+                      <Button
+                        type='button'
+                        className='absolute right-2 bottom-2 h-8 w-8 rounded-full p-0 md:hidden'
+                        onClick={sendMessage}
+                        disabled={!input.trim() || isThinking}
+                      >
+                        <Wand2 className='h-4 w-4' />
+                      </Button>
                     </div>
 
-                    <div className='grid grid-cols-2 gap-2 lg:w-[190px] lg:grid-cols-1'>
+                    <div className='hidden grid-cols-2 gap-2 md:grid lg:w-[190px] lg:grid-cols-1'>
                       <Button
                         type='button'
                         variant='outline'
