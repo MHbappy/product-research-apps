@@ -1,7 +1,23 @@
 'use client';
 
-import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
-import { Boxes, Search, Upload, X, Zap } from 'lucide-react';
+import React, {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
+import {
+  ArrowRight,
+  Boxes,
+  Filter,
+  Search,
+  Sparkles,
+  Upload,
+  X,
+  Zap,
+} from 'lucide-react';
 
 import PageContainer from '@/components/layout/page-container';
 import { Badge } from '@/components/ui/badge';
@@ -24,7 +40,7 @@ const DUMMY_PRODUCTS: Product[] = [
     quality: 92,
     lifecycle: 'winning',
     color: '#60a5fa',
-    imageUrl: null
+    imageUrl: null,
   },
   {
     id: 2,
@@ -39,7 +55,7 @@ const DUMMY_PRODUCTS: Product[] = [
     quality: 90,
     lifecycle: 'winning',
     color: '#94a3b8',
-    imageUrl: null
+    imageUrl: null,
   },
   {
     id: 3,
@@ -54,7 +70,7 @@ const DUMMY_PRODUCTS: Product[] = [
     quality: 88,
     lifecycle: 'trendy',
     color: '#cbd5e1',
-    imageUrl: null
+    imageUrl: null,
   },
   {
     id: 4,
@@ -69,7 +85,7 @@ const DUMMY_PRODUCTS: Product[] = [
     quality: 86,
     lifecycle: 'seasonal',
     color: '#a5f3fc',
-    imageUrl: null
+    imageUrl: null,
   },
   {
     id: 5,
@@ -84,7 +100,7 @@ const DUMMY_PRODUCTS: Product[] = [
     quality: 93,
     lifecycle: 'evergreen',
     color: '#fde68a',
-    imageUrl: null
+    imageUrl: null,
   },
   {
     id: 6,
@@ -99,7 +115,7 @@ const DUMMY_PRODUCTS: Product[] = [
     quality: 84,
     lifecycle: 'seasonal',
     color: '#c084fc',
-    imageUrl: null
+    imageUrl: null,
   },
   {
     id: 7,
@@ -114,7 +130,7 @@ const DUMMY_PRODUCTS: Product[] = [
     quality: 83,
     lifecycle: 'trendy',
     color: '#94a3b8',
-    imageUrl: null
+    imageUrl: null,
   },
   {
     id: 8,
@@ -129,7 +145,7 @@ const DUMMY_PRODUCTS: Product[] = [
     quality: 60,
     lifecycle: 'fade',
     color: '#fda4af',
-    imageUrl: null
+    imageUrl: null,
   },
   {
     id: 9,
@@ -144,7 +160,7 @@ const DUMMY_PRODUCTS: Product[] = [
     quality: 87,
     lifecycle: 'evergreen',
     color: '#fdba74',
-    imageUrl: null
+    imageUrl: null,
   },
   {
     id: 10,
@@ -159,7 +175,7 @@ const DUMMY_PRODUCTS: Product[] = [
     quality: 89,
     lifecycle: 'trendy',
     color: '#fde68a',
-    imageUrl: null
+    imageUrl: null,
   },
   {
     id: 11,
@@ -174,7 +190,7 @@ const DUMMY_PRODUCTS: Product[] = [
     quality: 80,
     lifecycle: 'seasonal',
     color: '#bae6fd',
-    imageUrl: null
+    imageUrl: null,
   },
   {
     id: 12,
@@ -189,7 +205,7 @@ const DUMMY_PRODUCTS: Product[] = [
     quality: 82,
     lifecycle: 'evergreen',
     color: '#b08968',
-    imageUrl: null
+    imageUrl: null,
   },
   {
     id: 13,
@@ -204,7 +220,7 @@ const DUMMY_PRODUCTS: Product[] = [
     quality: 91,
     lifecycle: 'winning',
     color: '#86efac',
-    imageUrl: null
+    imageUrl: null,
   },
   {
     id: 14,
@@ -219,7 +235,7 @@ const DUMMY_PRODUCTS: Product[] = [
     quality: 88,
     lifecycle: 'evergreen',
     color: '#a78bfa',
-    imageUrl: null
+    imageUrl: null,
   },
   {
     id: 15,
@@ -234,7 +250,7 @@ const DUMMY_PRODUCTS: Product[] = [
     quality: 81,
     lifecycle: 'seasonal',
     color: '#fcd34d',
-    imageUrl: null
+    imageUrl: null,
   },
   {
     id: 16,
@@ -249,7 +265,7 @@ const DUMMY_PRODUCTS: Product[] = [
     quality: 86,
     lifecycle: 'trendy',
     color: '#d6d3d1',
-    imageUrl: null
+    imageUrl: null,
   },
   {
     id: 17,
@@ -264,7 +280,7 @@ const DUMMY_PRODUCTS: Product[] = [
     quality: 94,
     lifecycle: 'evergreen',
     color: '#f5d0fe',
-    imageUrl: null
+    imageUrl: null,
   },
   {
     id: 18,
@@ -279,7 +295,7 @@ const DUMMY_PRODUCTS: Product[] = [
     quality: 84,
     lifecycle: 'winning',
     color: '#99f6e4',
-    imageUrl: null
+    imageUrl: null,
   },
   {
     id: 19,
@@ -294,7 +310,7 @@ const DUMMY_PRODUCTS: Product[] = [
     quality: 85,
     lifecycle: 'evergreen',
     color: '#cbd5e1',
-    imageUrl: null
+    imageUrl: null,
   },
   {
     id: 20,
@@ -309,56 +325,12 @@ const DUMMY_PRODUCTS: Product[] = [
     quality: 79,
     lifecycle: 'fade',
     color: '#64748b',
-    imageUrl: null
-  }
+    imageUrl: null,
+  },
 ];
 
-const TEXTAREA_MIN_HEIGHT = 104;
-const TEXTAREA_MAX_HEIGHT = 260;
-
-function SearchSkeleton() {
-  return (
-    <div className='overflow-hidden rounded-[28px] border border-slate-200/80 bg-white shadow-[0_10px_30px_rgba(15,23,42,0.05)] dark:border-slate-800 dark:bg-slate-900'>
-      <div className='p-4 sm:p-5'>
-        <div className='flex items-start gap-4'>
-          <Skeleton className='h-16 w-16 rounded-3xl' />
-          <div className='min-w-0 flex-1 space-y-3'>
-            <div className='flex items-center justify-between gap-4'>
-              <Skeleton className='h-5 w-44 rounded-full' />
-              <Skeleton className='h-5 w-16 rounded-full' />
-            </div>
-            <Skeleton className='h-4 w-28 rounded-full' />
-            <div className='grid grid-cols-2 gap-2 sm:grid-cols-4'>
-              <Skeleton className='h-10 rounded-2xl' />
-              <Skeleton className='h-10 rounded-2xl' />
-              <Skeleton className='h-10 rounded-2xl' />
-              <Skeleton className='h-10 rounded-2xl' />
-            </div>
-            <Skeleton className='h-10 rounded-[22px]' />
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function SearchResultsHeader({ count }: { count: number }) {
-  return (
-    <div className='mb-4 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between'>
-      <div className='text-sm text-slate-600 dark:text-slate-400'>
-        Showing{' '}
-        <span className='font-semibold text-slate-950 dark:text-white'>
-          {count}
-        </span>{' '}
-        results
-      </div>
-      <Badge variant='secondary' className='w-fit rounded-full px-3 py-1'>
-        <Zap className='mr-1 h-3.5 w-3.5' />
-        20 items
-      </Badge>
-    </div>
-  );
-}
+const TEXTAREA_MIN_HEIGHT = 108;
+const TEXTAREA_MAX_HEIGHT = 264;
 
 type ComposerProps = {
   query: string;
@@ -375,25 +347,106 @@ type ComposerProps = {
   compact?: boolean;
 };
 
+function SearchSkeleton() {
+  return (
+    <div className="overflow-hidden rounded-[28px] border border-slate-200/80 bg-white shadow-[0_10px_30px_rgba(15,23,42,0.05)] dark:border-slate-800 dark:bg-slate-900">
+      <div className="p-4 sm:p-5">
+        <div className="flex items-start gap-4">
+          <Skeleton className="h-16 w-16 rounded-3xl" />
+          <div className="min-w-0 flex-1 space-y-3">
+            <div className="flex items-center justify-between gap-4">
+              <Skeleton className="h-5 w-44 rounded-full" />
+              <Skeleton className="h-5 w-16 rounded-full" />
+            </div>
+            <Skeleton className="h-4 w-28 rounded-full" />
+            <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
+              <Skeleton className="h-10 rounded-2xl" />
+              <Skeleton className="h-10 rounded-2xl" />
+              <Skeleton className="h-10 rounded-2xl" />
+              <Skeleton className="h-10 rounded-2xl" />
+            </div>
+            <Skeleton className="h-10 rounded-[22px]" />
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function EmptyState() {
+  return (
+    <div className="flex min-h-[42vh] items-center justify-center">
+      <div className="max-w-lg rounded-[32px] border border-slate-200 bg-white px-6 py-10 text-center shadow-[0_16px_50px_rgba(15,23,42,0.06)] dark:border-slate-800 dark:bg-slate-900 sm:px-8 sm:py-12">
+        <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-3xl bg-slate-50 shadow-sm dark:bg-slate-800">
+          <Boxes className="h-6 w-6 text-slate-500 dark:text-slate-300" />
+        </div>
+        <h3 className="text-lg font-semibold text-slate-950 dark:text-white">
+          No strong matches yet
+        </h3>
+        <p className="mt-2 text-sm leading-6 text-slate-600 dark:text-slate-400">
+          Try a broader query or attach a clearer image. The backend ranking logic can replace this
+          dummy matcher later.
+        </p>
+      </div>
+    </div>
+  );
+}
+
+function SearchResultsHeader({
+                               count,
+                               query,
+                               hasImage,
+                             }: {
+  count: number;
+  query: string;
+  hasImage: boolean;
+}) {
+  return (
+    <div className="mb-4 flex flex-col gap-3 sm:mb-5 sm:flex-row sm:items-center sm:justify-between">
+      <div className="space-y-1">
+        <div className="text-sm text-slate-600 dark:text-slate-400">
+          Showing{' '}
+          <span className="font-semibold text-slate-950 dark:text-white">{count}</span> results
+        </div>
+        <div className="text-xs text-slate-500 dark:text-slate-500">
+          {query ? `Matched for “${query}”` : 'Sorted by product strength'}
+          {hasImage ? ' · image used as a signal' : ''}
+        </div>
+      </div>
+
+      <div className="flex flex-wrap items-center gap-2">
+        <Badge variant="secondary" className="rounded-full px-3 py-1.5">
+          <Zap className="mr-1 h-3.5 w-3.5" />
+          20 curated items
+        </Badge>
+        <Badge variant="secondary" className="rounded-full px-3 py-1.5">
+          <Filter className="mr-1 h-3.5 w-3.5" />
+          Ranked by score
+        </Badge>
+      </div>
+    </div>
+  );
+}
+
 function Composer({
-  query,
-  setQuery,
-  hasInput,
-  isLoading,
-  imageFile,
-  imagePreview,
-  fileInputRef,
-  textareaRef,
-  onPickImage,
-  onClearImage,
-  onRunSearch,
-  compact = false
-}: ComposerProps) {
-  const resizeTextarea = React.useCallback(() => {
+                    query,
+                    setQuery,
+                    hasInput,
+                    isLoading,
+                    imageFile,
+                    imagePreview,
+                    fileInputRef,
+                    textareaRef,
+                    onPickImage,
+                    onClearImage,
+                    onRunSearch,
+                    compact = false,
+                  }: ComposerProps) {
+  const resizeTextarea = useCallback(() => {
     const el = textareaRef.current;
     if (!el) return;
 
-    el.style.height = '0px';
+    el.style.height = 'auto';
     const nextHeight = Math.min(
       Math.max(el.scrollHeight, TEXTAREA_MIN_HEIGHT),
       TEXTAREA_MAX_HEIGHT
@@ -405,31 +458,70 @@ function Composer({
     resizeTextarea();
   }, [query, resizeTextarea]);
 
+  useEffect(() => {
+    const onResize = () => resizeTextarea();
+    window.addEventListener('resize', onResize);
+    return () => window.removeEventListener('resize', onResize);
+  }, [resizeTextarea]);
+
   return (
-    <div
-      className={[
-        'mx-auto w-full max-w-4xl',
-        compact ? 'pt-2 sm:pt-4' : ''
-      ].join(' ')}
-    >
-      <div className='mb-4 text-center sm:mb-5'>
-        <p className='text-xs font-medium tracking-[0.22em] text-slate-900 uppercase dark:text-slate-400'>
-          Just describe it or upload a photo — we’ll find the best match.
-        </p>
-      </div>
+    <div className={['mx-auto w-full max-w-5xl', compact ? 'pt-0 sm:pt-1' : ''].join(' ')}>
+      {!compact ? (
+        <div className="mb-5 text-center sm:mb-6">
+          <div className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-3 py-1.5 text-xs font-medium text-slate-600 shadow-sm dark:border-slate-800 dark:bg-slate-900 dark:text-slate-300">
+            <Sparkles className="h-3.5 w-3.5 text-slate-500 dark:text-slate-300" />
+            Product discovery search
+          </div>
 
-      <div className='rounded-[34px] border border-slate-200 bg-white px-4 py-4 shadow-[0_20px_60px_rgba(15,23,42,0.08)] sm:px-5 sm:py-5 dark:border-slate-800 dark:bg-slate-900'>
-        <div className='relative'>
-          <Search className='pointer-events-none absolute top-5 left-4 h-5 w-5 text-slate-400' />
+          <h1 className="mt-4 text-3xl font-semibold tracking-tight text-slate-950 dark:text-white sm:text-5xl">
+            Find products with text or image
+          </h1>
 
+          <p className="mx-auto mt-3 max-w-2xl text-sm leading-6 text-slate-600 dark:text-slate-400 sm:text-base">
+            Describe the product you want, or attach a photo. The interface is designed for fast
+            scanning on mobile and clean comparison on desktop.
+          </p>
+
+          <div className="mt-5 flex flex-wrap items-center justify-center gap-2">
+            <Badge variant="secondary" className="rounded-full px-3 py-1.5">
+              Fast search
+            </Badge>
+            <Badge variant="secondary" className="rounded-full px-3 py-1.5">
+              Mobile-first layout
+            </Badge>
+            <Badge variant="secondary" className="rounded-full px-3 py-1.5">
+              Responsive results
+            </Badge>
+          </div>
+        </div>
+      ) : null}
+
+      <div className="rounded-[34px] border border-slate-200/80 bg-white/95 p-4 shadow-[0_20px_70px_rgba(15,23,42,0.08)] backdrop-blur-sm sm:p-5 dark:border-slate-800 dark:bg-slate-900/95">
+        <div className="mb-4 flex items-start justify-between gap-3">
+          <div>
+            <div className="flex items-center gap-2 text-sm font-medium text-slate-900 dark:text-white">
+              <Search className="h-4 w-4 text-slate-500 dark:text-slate-400" />
+              Smart product search
+            </div>
+            <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">
+              Type a keyword, category, use case, or attach an image.
+            </p>
+          </div>
+          <Badge variant="secondary" className="rounded-full px-3 py-1.5">
+            Ctrl + Enter
+          </Badge>
+        </div>
+
+        <div className="relative">
+          <Search className="pointer-events-none absolute left-4 top-4 h-5 w-5 text-slate-400" />
           <textarea
             ref={textareaRef}
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder='Describe the product you want to find or Search by Image...'
+            placeholder="Describe the product you want to find or search by image..."
             rows={1}
             style={{ height: `${TEXTAREA_MIN_HEIGHT}px` }}
-            className='min-h-[104px] w-full resize-none overflow-hidden rounded-[28px] border border-slate-200 bg-slate-50 px-12 py-4 pr-4 text-[15px] leading-7 text-slate-950 transition-[border-color,background-color,box-shadow] duration-200 outline-none placeholder:text-slate-400 focus:border-slate-300 focus:bg-white focus:shadow-[0_0_0_4px_rgba(148,163,184,0.12)] sm:pr-[192px] dark:border-slate-700 dark:bg-slate-950 dark:text-white dark:placeholder:text-slate-500 dark:focus:border-slate-600 dark:focus:bg-slate-950'
+            className="min-h-[108px] w-full resize-none overflow-hidden rounded-[28px] border border-slate-200 bg-slate-50 px-12 py-4 pr-4 text-[15px] leading-7 text-slate-950 outline-none transition-[border-color,background-color,box-shadow] duration-200 placeholder:text-slate-400 focus:border-slate-300 focus:bg-white focus:shadow-[0_0_0_4px_rgba(148,163,184,0.12)] sm:pr-[208px] dark:border-slate-700 dark:bg-slate-950 dark:text-white dark:placeholder:text-slate-500 dark:focus:border-slate-600 dark:focus:bg-slate-950"
             onInput={resizeTextarea}
             onKeyDown={(e) => {
               if (e.key === 'Enter' && e.ctrlKey) {
@@ -437,83 +529,84 @@ function Composer({
                 onRunSearch();
               }
             }}
+            aria-label="Search products"
           />
 
-          <div className='absolute top-3 right-3 hidden items-center gap-2 sm:flex'>
+          <div className="absolute right-3 top-3 hidden items-center gap-2 sm:flex">
             <Button
-              type='button'
-              variant='ghost'
-              className='h-9 rounded-full px-3 text-slate-600 hover:bg-slate-100 hover:text-slate-950 dark:text-slate-300 dark:hover:bg-slate-800 dark:hover:text-white'
+              type="button"
+              variant="ghost"
+              className="h-10 rounded-full px-4 text-slate-600 hover:bg-slate-100 hover:text-slate-950 dark:text-slate-300 dark:hover:bg-slate-800 dark:hover:text-white"
               onClick={() => fileInputRef.current?.click()}
             >
-              <Upload className='mr-2 h-4 w-4' />
+              <Upload className="mr-2 h-4 w-4" />
               Upload
             </Button>
 
             <Button
-              type='button'
-              className='h-9 rounded-full px-4'
+              type="button"
+              className="h-10 rounded-full px-5"
               onClick={onRunSearch}
               disabled={!hasInput || isLoading}
             >
-              {isLoading ? 'Searching' : 'Submit'}
+              {isLoading ? 'Searching…' : 'Search'}
+              {!isLoading ? <ArrowRight className="ml-2 h-4 w-4" /> : null}
             </Button>
           </div>
         </div>
 
-        <div className='mt-3 flex flex-col gap-3 sm:hidden'>
-          <div className='flex gap-2'>
+        <div className="mt-3 flex flex-col gap-3 sm:hidden">
+          <div className="grid grid-cols-2 gap-2">
             <Button
-              type='button'
-              variant='outline'
-              className='h-10 flex-1 rounded-full border-slate-200 bg-white px-4 text-slate-700 hover:bg-slate-50 hover:text-slate-950 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300 dark:hover:bg-slate-800 dark:hover:text-white'
+              type="button"
+              variant="outline"
+              className="h-11 rounded-full border-slate-200 bg-white px-4 text-slate-700 hover:bg-slate-50 hover:text-slate-950 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300 dark:hover:bg-slate-800 dark:hover:text-white"
               onClick={() => fileInputRef.current?.click()}
             >
-              <Upload className='mr-2 h-4 w-4' />
-              Upload image
+              <Upload className="mr-2 h-4 w-4" />
+              Upload
             </Button>
-
             <Button
-              type='button'
-              className='h-10 flex-1 rounded-full px-4'
+              type="button"
+              className="h-11 rounded-full px-4"
               onClick={onRunSearch}
               disabled={!hasInput || isLoading}
             >
-              {isLoading ? 'Searching' : 'Submit'}
+              {isLoading ? 'Searching…' : 'Search'}
             </Button>
           </div>
         </div>
 
         <input
           ref={fileInputRef}
-          type='file'
-          accept='image/*'
-          className='hidden'
+          type="file"
+          accept="image/*"
+          className="hidden"
           onChange={(e) => onPickImage(e.target.files?.[0])}
         />
 
         {imagePreview ? (
-          <div className='mt-4 flex items-center gap-3 rounded-[24px] border border-slate-200 bg-slate-50 p-3 dark:border-slate-800 dark:bg-slate-950'>
+          <div className="mt-4 flex items-center gap-3 rounded-[24px] border border-slate-200 bg-slate-50 p-3 dark:border-slate-800 dark:bg-slate-950">
             <img
               src={imagePreview}
-              alt='Selected preview'
-              className='h-14 w-14 rounded-2xl object-cover'
+              alt="Selected preview"
+              className="h-14 w-14 rounded-2xl object-cover"
             />
-            <div className='min-w-0 flex-1'>
-              <p className='truncate text-sm font-medium text-slate-950 dark:text-white'>
+            <div className="min-w-0 flex-1">
+              <p className="truncate text-sm font-medium text-slate-950 dark:text-white">
                 {imageFile?.name}
               </p>
-              <p className='text-xs text-slate-500 dark:text-slate-400'>
+              <p className="text-xs text-slate-500 dark:text-slate-400">
                 Image attached for search
               </p>
             </div>
             <Button
-              type='button'
-              variant='ghost'
-              className='rounded-full px-3 text-slate-500 hover:bg-slate-100 hover:text-slate-950 dark:text-slate-300 dark:hover:bg-slate-800 dark:hover:text-white'
+              type="button"
+              variant="ghost"
+              className="rounded-full px-3 text-slate-500 hover:bg-slate-100 hover:text-slate-950 dark:text-slate-300 dark:hover:bg-slate-800 dark:hover:text-white"
               onClick={onClearImage}
             >
-              <X className='h-4 w-4' />
+              <X className="h-4 w-4" />
             </Button>
           </div>
         ) : null}
@@ -548,26 +641,36 @@ export default function ProductSearchPage() {
     };
   }, []);
 
-  const onPickImage = (file?: File) => {
+  const onPickImage = useCallback((file?: File) => {
     if (!file || !file.type.startsWith('image/')) return;
 
     setImageFile(file);
 
-    if (previewUrlRef.current) URL.revokeObjectURL(previewUrlRef.current);
+    if (previewUrlRef.current) {
+      URL.revokeObjectURL(previewUrlRef.current);
+    }
+
     const nextUrl = URL.createObjectURL(file);
     previewUrlRef.current = nextUrl;
     setImagePreview(nextUrl);
-  };
+  }, []);
 
-  const clearImage = () => {
+  const clearImage = useCallback(() => {
     setImageFile(null);
-    if (previewUrlRef.current) URL.revokeObjectURL(previewUrlRef.current);
-    previewUrlRef.current = null;
-    setImagePreview(null);
-    if (fileInputRef.current) fileInputRef.current.value = '';
-  };
 
-  const runSearch = () => {
+    if (previewUrlRef.current) {
+      URL.revokeObjectURL(previewUrlRef.current);
+      previewUrlRef.current = null;
+    }
+
+    setImagePreview(null);
+
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
+  }, []);
+
+  const runSearch = useCallback(() => {
     if (!hasInput) return;
 
     if (searchTimeoutRef.current !== null) {
@@ -580,88 +683,135 @@ export default function ProductSearchPage() {
     searchTimeoutRef.current = window.setTimeout(() => {
       const q = query.trim().toLowerCase();
       const seed = (imageFile?.name ?? '').toLowerCase();
-      let next = [...DUMMY_PRODUCTS];
 
-      if (q) {
-        const parts = q.split(' ').filter((part) => part.length > 0);
-        next = next
-          .filter((product) => {
-            const haystack = [
-              product.name,
-              product.category,
-              product.color,
-              product.lifecycle,
-              String(product.price),
-              String(product.score)
-            ]
+      const scored = DUMMY_PRODUCTS.map((product) => {
+        const haystack = [
+          product.name,
+          product.category,
+          product.color,
+          product.lifecycle,
+          String(product.price),
+          String(product.score),
+          String(product.quality),
+          String(product.demand),
+          String(product.reviews),
+        ]
+          .filter(Boolean)
+          .join(' ')
+          .toLowerCase();
+
+        const queryMatch =
+          !q
+            ? 0
+            : q
+              .split(/\s+/)
               .filter(Boolean)
-              .join(' ')
-              .toLowerCase();
+              .reduce((acc, word) => acc + (haystack.includes(word) ? 1 : 0), 0);
 
-            return (
-              haystack.includes(q) ||
-              parts.some((word) => haystack.includes(word))
-            );
-          })
-          .sort((a, b) => b.score - a.score);
-      }
+        const exactMatch = q && haystack.includes(q) ? 3 : 0;
 
-      if (imageFile) {
-        if (seed.includes('shoe') || seed.includes('fashion')) {
-          next = next.filter(
-            (p) => p.category === 'Fashion' || p.category === 'Accessories'
-          );
-        } else if (
-          seed.includes('home') ||
-          seed.includes('room') ||
-          seed.includes('desk')
-        ) {
-          next = next.filter((p) =>
-            ['Home', 'Kitchen', 'Office'].includes(p.category)
-          );
-        } else if (
-          seed.includes('fit') ||
-          seed.includes('gym') ||
-          seed.includes('sport')
-        ) {
-          next = next.filter((p) => p.category === 'Fitness');
+        let imageBoost = 0;
+        if (seed) {
+          if (seed.includes('shoe') || seed.includes('fashion')) {
+            imageBoost = product.category === 'Fashion' || product.category === 'Accessories' ? 2 : 0;
+          } else if (seed.includes('home') || seed.includes('room') || seed.includes('desk')) {
+            imageBoost = ['Home', 'Kitchen', 'Office'].includes(product.category) ? 2 : 0;
+          } else if (seed.includes('fit') || seed.includes('gym') || seed.includes('sport')) {
+            imageBoost = product.category === 'Fitness' ? 2 : 0;
+          }
         }
-      }
 
-      setResults(next.slice(0, 20));
+        const businessScore =
+          product.score * 0.7 +
+          product.quality * 0.15 +
+          product.demand * 0.1 -
+          product.competition * 0.05;
+
+        return {
+          product,
+          rank: businessScore + queryMatch * 8 + exactMatch * 10 + imageBoost * 7,
+        };
+      });
+
+      const next = scored
+        .filter(({ product, rank }) => {
+          if (!q && !seed) return true;
+          if (q && rank > 0) return true;
+          if (seed && rank > 0) return true;
+          return q ? product.name.toLowerCase().includes(q) || product.category.toLowerCase().includes(q) : true;
+        })
+        .sort((a, b) => b.rank - a.rank)
+        .map(({ product }) => product)
+        .slice(0, 20);
+
+      setResults(next);
       setIsLoading(false);
 
       requestAnimationFrame(() => {
         topRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
       });
-    }, 1200);
-  };
+    }, 900);
+  }, [hasInput, imageFile?.name, query]);
+
+  const summaryStats = useMemo(() => {
+    const avgScore =
+      results.length > 0
+        ? Math.round(results.reduce((sum, item) => sum + item.score, 0) / results.length)
+        : 0;
+
+    const winningCount = results.filter((item) => item.lifecycle === 'winning').length;
+    const evergreenCount = results.filter((item) => item.lifecycle === 'evergreen').length;
+
+    return { avgScore, winningCount, evergreenCount };
+  }, [results]);
 
   return (
     <PageContainer scrollable={true}>
-      <div className='min-h-screen overflow-x-hidden bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100'>
-        <div className='flex min-h-screen flex-col p-3 sm:p-4 lg:p-5'>
+      <div className="min-h-screen overflow-x-hidden bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100">
+        <div className="mx-auto flex min-h-screen w-full max-w-7xl flex-col px-3 py-3 sm:px-4 sm:py-4 lg:px-5 lg:py-5">
           {isInitial ? (
-            <div className='flex flex-1 items-center justify-center'>
-              <Composer
-                query={query}
-                setQuery={setQuery}
-                hasInput={hasInput}
-                isLoading={isLoading}
-                imageFile={imageFile}
-                imagePreview={imagePreview}
-                fileInputRef={fileInputRef}
-                textareaRef={textareaRef}
-                onPickImage={onPickImage}
-                onClearImage={clearImage}
-                onRunSearch={runSearch}
-              />
+            <div className="flex flex-1 items-center justify-center py-4 sm:py-6">
+              <div className="w-full">
+                <Composer
+                  query={query}
+                  setQuery={setQuery}
+                  hasInput={hasInput}
+                  isLoading={isLoading}
+                  imageFile={imageFile}
+                  imagePreview={imagePreview}
+                  fileInputRef={fileInputRef}
+                  textareaRef={textareaRef}
+                  onPickImage={onPickImage}
+                  onClearImage={clearImage}
+                  onRunSearch={runSearch}
+                />
+
+                {/*<div className="mx-auto mt-6 grid max-w-5xl gap-3 sm:mt-8 sm:grid-cols-3">*/}
+                {/*  {[*/}
+                {/*    { label: 'Fast discovery', value: 'Text or image input' },*/}
+                {/*    { label: 'Mobile ready', value: 'Large touch targets' },*/}
+                {/*    { label: 'Desktop ready', value: 'Wide result grid' },*/}
+                {/*  ].map((item) => (*/}
+                {/*    <div*/}
+                {/*      key={item.label}*/}
+                {/*      className="rounded-[24px] border border-slate-200 bg-white p-4 shadow-[0_10px_30px_rgba(15,23,42,0.05)] dark:border-slate-800 dark:bg-slate-900"*/}
+                {/*    >*/}
+                {/*      <div className="text-xs font-medium uppercase tracking-[0.2em] text-slate-500 dark:text-slate-400">*/}
+                {/*        {item.label}*/}
+                {/*      </div>*/}
+                {/*      <div className="mt-2 text-sm font-medium text-slate-950 dark:text-white">*/}
+                {/*        {item.value}*/}
+                {/*      </div>*/}
+                {/*    </div>*/}
+                {/*  ))}*/}
+                {/*</div>*/}
+              </div>
             </div>
           ) : (
             <>
               <div
                 ref={topRef}
-                className='flex shrink-0 justify-center px-0 pt-2 sm:pt-3 lg:pt-4'
+                className="sticky top-0 z-20 -mx-3 mb-4 border-b border-slate-200/70 bg-slate-50/90 px-3 py-3 backdrop-blur md:-mx-4 md:px-4 lg:-mx-5 lg:px-5 dark:border-slate-800/70 dark:bg-slate-950/85"
               >
                 <Composer
                   query={query}
@@ -679,40 +829,69 @@ export default function ProductSearchPage() {
                 />
               </div>
 
-              <div className='mt-4 pb-8'>
+              {/*<div className="mb-4 grid gap-3 sm:grid-cols-3">*/}
+              {/*  <div className="rounded-[24px] border border-slate-200 bg-white p-4 shadow-[0_10px_30px_rgba(15,23,42,0.05)] dark:border-slate-800 dark:bg-slate-900">*/}
+              {/*    <div className="text-xs font-medium uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">*/}
+              {/*      Results*/}
+              {/*    </div>*/}
+              {/*    <div className="mt-2 text-2xl font-semibold text-slate-950 dark:text-white">*/}
+              {/*      {results.length}*/}
+              {/*    </div>*/}
+              {/*    <div className="mt-1 text-sm text-slate-600 dark:text-slate-400">*/}
+              {/*      Products ranked from strongest to weakest match.*/}
+              {/*    </div>*/}
+              {/*  </div>*/}
+
+              {/*  <div className="rounded-[24px] border border-slate-200 bg-white p-4 shadow-[0_10px_30px_rgba(15,23,42,0.05)] dark:border-slate-800 dark:bg-slate-900">*/}
+              {/*    <div className="text-xs font-medium uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">*/}
+              {/*      Average score*/}
+              {/*    </div>*/}
+              {/*    <div className="mt-2 text-2xl font-semibold text-slate-950 dark:text-white">*/}
+              {/*      {summaryStats.avgScore}*/}
+              {/*    </div>*/}
+              {/*    <div className="mt-1 text-sm text-slate-600 dark:text-slate-400">*/}
+              {/*      Higher score means a stronger business candidate.*/}
+              {/*    </div>*/}
+              {/*  </div>*/}
+
+              {/*  <div className="rounded-[24px] border border-slate-200 bg-white p-4 shadow-[0_10px_30px_rgba(15,23,42,0.05)] dark:border-slate-800 dark:bg-slate-900">*/}
+              {/*    <div className="text-xs font-medium uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">*/}
+              {/*      Lifecycle mix*/}
+              {/*    </div>*/}
+              {/*    <div className="mt-2 text-2xl font-semibold text-slate-950 dark:text-white">*/}
+              {/*      {summaryStats.winningCount}/{summaryStats.evergreenCount}*/}
+              {/*    </div>*/}
+              {/*    <div className="mt-1 text-sm text-slate-600 dark:text-slate-400">*/}
+              {/*      Winning vs evergreen items in current results.*/}
+              {/*    </div>*/}
+              {/*  </div>*/}
+              {/*</div>*/}
+
+              <div className="pb-8">
                 {isLoading ? (
                   <div>
-                    <SearchResultsHeader count={20} />
-                    <div className='grid gap-4 md:grid-cols-2 2xl:grid-cols-3'>
-                      {Array.from({ length: 20 }).map((_, index) => (
+                    <SearchResultsHeader count={20} query={query.trim()} hasImage={Boolean(imageFile)} />
+                    <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+                      {Array.from({ length: 12 }).map((_, index) => (
                         <SearchSkeleton key={index} />
                       ))}
                     </div>
                   </div>
                 ) : results.length > 0 ? (
                   <div>
-                    <SearchResultsHeader count={results.length} />
-                    <div className='grid gap-4 md:grid-cols-2 2xl:grid-cols-3'>
+                    <SearchResultsHeader
+                      count={results.length}
+                      query={query.trim()}
+                      hasImage={Boolean(imageFile)}
+                    />
+                    <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
                       {results.map((product) => (
                         <ProductCard key={product.id} product={product} />
                       ))}
                     </div>
                   </div>
                 ) : (
-                  <div className='flex min-h-[40vh] items-center justify-center'>
-                    <div className='max-w-md px-6 py-12 text-center'>
-                      <div className='mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-3xl bg-white shadow-sm dark:bg-slate-900'>
-                        <Boxes className='h-6 w-6 text-slate-500 dark:text-slate-400' />
-                      </div>
-                      <h3 className='text-lg font-semibold text-slate-950 dark:text-white'>
-                        No strong matches yet
-                      </h3>
-                      <p className='mt-2 text-sm leading-6 text-slate-600 dark:text-slate-400'>
-                        Try a broader query or attach a clearer image. The
-                        backend can replace this dummy ranking logic later.
-                      </p>
-                    </div>
-                  </div>
+                  <EmptyState />
                 )}
               </div>
             </>
